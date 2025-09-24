@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bgdm50ecqlhsg"]
+
+[ext_resource type="Script" uid="uid://dha04jddpb4p6" path="res://modules/damage/health.gd" id="1_ledv5"]
+
+[node name="Health" type="Area2D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_ledv5")

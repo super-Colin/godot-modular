@@ -3,6 +3,8 @@ extends Node
 
 #region Exports
 
+## Applies gravity to parents velocity without parent needing to invoke it. Useful for things that don't need anykind of behavior
+@export var autoGravity:bool = false
 @export var gravityScale:float = 1.0
 @export var maxFallSpeed:float = 200.0
 
@@ -10,7 +12,16 @@ extends Node
 
 
 
+func _ready() -> void:
+	return
 
+func _physics_process(delta: float) -> void:
+	#return
+	if autoGravity:
+		var theThing = get_parent()
+		#var theThing:CharacterBody2D = get_parent()
+		applyGravity(theThing, delta)
+		theThing.move_and_slide()
 
 
 func applyGravity(entity: CharacterBody2D, delta: float) -> void:

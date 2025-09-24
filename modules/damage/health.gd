@@ -23,6 +23,7 @@ signal tookDamage(amount: int, source: Node)
 
 #region Internal-Variables
 
+var dead: bool = false
 var currentHealth: int
 
 #endregion Internal-Variables
@@ -39,6 +40,11 @@ func _ready() -> void:
 
 
 #region Health Logic
+
+#func takeDamage(amount: int) -> void:
+func takeDamageFromSource(source:Node) -> void:
+	takeDamage(source.damageAmount)
+	#source.damageFeedback($'.')
 
 func takeDamage(amount: int, source: Node = null) -> void:
 	if isDead():

@@ -43,6 +43,8 @@ var currentPointOfInterest:Vector2
 var targetSighted:bool=false
 
 
+func forgetTarget():
+	currentTargetNode = null
 
 func getPOI(entity: CharacterBody2D)->Vector2:
 	#if not currentTargetNode or not isValidTargetNode(currentTargetNode):

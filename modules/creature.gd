@@ -60,12 +60,11 @@ var pointOfInterest:Vector2 = Vector2.ZERO
 
 
 
+
 func _ready() -> void:
 	$'.'.add_to_group("Creatures", true)
-	$Health.died.connect(_died)
-	if playerControlled:
-		$Movement.playerControlled = true
-		$Damage.playerControlled = true
+	setupHealth()
+	setupDamage()
 
 
 func _physics_process(delta: float) -> void:
@@ -82,22 +81,38 @@ func _physics_process(delta: float) -> void:
 	# get or find new target to explore
 	var targetPosition = $Behavior.getPOI($'.') # will change state if needed
 	if targetPosition == Vector2.ZERO:
-		print("creature - behavior returned target as zero, just moving forward")
 		targetPosition = Vector2(100,0) * getFacingDirection()
 	else:
 		faceDirection(targetPosition)
 	# move toward target
-	if currentState == CreatureStates.ATTACKING and not $Damage.isDoneAttacking(): 
+	if currentState == CreatureStates.ATTACKING: 
 		# stay still if attacking
 		$Movement.aiControl($'.', delta, Vector2.ZERO)
 	else:
-		#$Movement.aiControl($'.', delta, pointOfInterest)
 		$Movement.aiControl($'.', delta, targetPosition)
-	# attack if in range
 	move_and_slide()
 
 
 
+
+func setupHealth():
+	$Health.died.connect(_died)
+
+
+#region Damage
+func setupDamage():
+	$Damage.s_healthAreaEntered.connect(attack)
+
+func attack(healthArea):
+	changeState(CreatureStates.ATTACKING)
+	$Damage.attackHealthArea(healthArea)
+	$Sprite.play("attacking")
+
+func doneAttacking():
+	changeState(CreatureStates.PERSUING_TARGET)
+
+
+#endregion Damage
 
 func ensurePOI():
 	if not targetNode or not isValidTargetNode(targetNode):
@@ -161,41 +176,6 @@ func getMovementDirection() -> Vector2:
 
 
 
-#region Environment Awareness
-#
-#func _canSeeNode(node:Node) -> bool:
-	#if not node:
-		#return false
-	#var toNode = node.global_position - global_position
-	#var distance = toNode.length()
-	#if distance > visionRange:
-		#return false
-	## Check angle between enemy's "facing direction" and the vector to the player
-	#var facingDirection = getFacingDirection()
-	#var angle = rad_to_deg(facingDirection.angle_to(toNode.normalized()))
-	#if abs(angle) > visionRange / 2.0:
-		#return false
-	## Line-of-sight check using RayCast2D
-	#if has_node("LineOfSight"):
-		#var ray = $LineOfSight
-		#ray.target_position = toNode
-		#ray.force_raycast_update()
-		#if ray.is_colliding():
-			##var collider = ray.get_collider()
-			#if ray.get_collider() == toNode:
-				#return true
-	#return false
-
-
-
-#func isCloseToWall() -> bool:
-	#return $WallCheck.is_colliding()
-#
-#func isCloseToLedge() -> bool:
-	#return is_on_floor() and not $LedgeCheck.is_colliding()
-
-#endregion Environment Awareness
-
 
 
 #region State Management
@@ -213,6 +193,7 @@ func changeState(new_state: CreatureStates) -> void:
 
 func _died():
 	#$Sprite.play("died")
+	currentState = CreatureStates.DEAD
 	s_died.emit()
 	print("creature - dead")
 
@@ -237,8 +218,8 @@ func turnRight():
 	if getFacingDirection().x > 0:
 		return
 	$Sprite.flip_h = false
-	$Movement.turnRight()
-	#$Damage.turnRight()
+	$Movement.turnRight() # flip wall and ledge check rays
+	$Damage.position.x = abs($Damage.position.x)
 	#if $'.'.has_node("EyeLight"):
 		#$EyeLight.position.x = abs($EyeLight.position.x)
 
@@ -246,8 +227,8 @@ func turnLeft():
 	if getFacingDirection().x < 0:
 		return
 	$Sprite.flip_h = true
-	$Movement.turnLeft()
-	#$Damage.turnLeft()
+	$Movement.turnLeft() # flip wall and ledge check rays
+	$Damage.position.x = -abs($Damage.position.x)
 	#if $'.'.has_node("EyeLight"):
 		#$EyeLight.position.x = -abs($EyeLight.position.x)
 
@@ -264,27 +245,6 @@ func turnLeft():
 
 
 
-
-		# attack if in range
-		#match currentState:
-			#CreatureStates.ATTACKING:
-				#$Movement.move($'.', delta, Vector2.ZERO)
-				#if $Damage.doneAttacking():
-					#changeState(CreatureStates.IDLE)
-			#CreatureStates.CHASING:
-				#if $Damage.isInAttackRange(targetNode):
-					#print("creature - attacking")
-				#else:
-					#$Movement.move($'.', delta, targetNode)
-			#CreatureStates.ATTACKING:
-				#$Movement.setDirection(Vector2.ZERO)
-			#CreatureStates.MOVING, CreatureStates.IDLE:
-				##pursueTargets(delta)
-				#$Movement.move($'.', delta, pointOfInterest)
-			#CreatureStates.STUNNED, CreatureStates.DEAD:
-				#$Movement.setDirection(Vector2.ZERO)
-			#_:
-				#$Movement.setDirection(Vector2.ZERO)
 
 
 

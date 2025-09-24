@@ -74,9 +74,6 @@ func playerControl(entity:CharacterBody2D, delta:float)->void:
 	return
 
 func aiControl(entity:CharacterBody2D, delta:float, target)->void:
-	if not target:
-		print("movement - has no target, expected Node2D or relative Vector2: ", target)
-		return
 	var targetPosition = Vector2.ZERO
 	if target is Node:
 		#print("movement - target is node")
@@ -87,45 +84,34 @@ func aiControl(entity:CharacterBody2D, delta:float, target)->void:
 	moveToward(entity, delta, targetPosition)
 
 func moveToward(entity:CharacterBody2D, delta:float, target:Vector2)->void:
-	print("movement - target is: ", target)
+	#print("movement - target is: ", target)
 	var accel = acceleration
 	var fric = friction
 	if isCloseToWall(entity):
 		s_hitWall.emit()
-	if isCloseToLedge(entity):
+	elif isCloseToLedge(entity):
 		s_hitWall.emit()
 	if not entity.is_on_floor():
 		accel = accelerationAir
 		fric = frictionAir
 	if not abs(entity.velocity.x) > abs(maxSpeed):
-		#var walkingInfluence = sign(entity.getFacingDirection().x) * accel * delta * 100
 		var walkingInfluence = sign(target.normalized().x) * accel * delta * 100
 		entity.velocity.x += walkingInfluence
-		#print("movement - walkingInfluence is: ", walkingInfluence)
-	else:
 		#print("movement - moving too fast: ", entity.velocity.x, " > ", maxSpeed)
 		#print("enemy - too fast.. velocity: ", velocity)
 		#entity.velocity.x = move_toward(entity.velocity.x, maxSpeed, fric * delta * 100)
-		entity.velocity.x = move_toward(entity.velocity.x, 0, fric * delta * 10)
-	#if direction:
-		#walkingInfluence = sign(direction.x) * accel * delta * 100
-		#if (not entity.velocity.x < -maxSpeed and not entity.velocity.x > maxSpeed):
-			#entity.velocity.x += walkingInfluence
-		#else:
-			##print("enemy - too fast.. velocity: ", velocity)
-			#entity.velocity.x = move_toward(entity.velocity.x, maxSpeed, fric * delta * 100)
-		##print("enemy - walkingInfluences: ", walkingInfluence)
-	#else:
-		##print("enemy - no direction: ", direction)
-		#entity.velocity.x = move_toward(entity.velocity.x, 0, fric * delta * 100)
+	elif target == Vector2.ZERO:
+		entity.velocity.x = 0
+	else:
+		entity.velocity.x = move_toward(entity.velocity.x, 0, fric * delta * 500)
 
 
 
-func turnRight(_entity:CharacterBody2D=null)->void:
+func turnRight()->void:
 	$WallCheckRay.target_position.x = abs($WallCheckRay.target_position.x)
 	$LedgeCheckRay.target_position.x = abs($LedgeCheckRay.target_position.x)
 
-func turnLeft(_entity:CharacterBody2D=null)->void:
+func turnLeft()->void:
 	$WallCheckRay.target_position.x = -abs($WallCheckRay.target_position.x)
 	$LedgeCheckRay.target_position.x = -abs($LedgeCheckRay.target_position.x)
 
@@ -136,20 +122,6 @@ func turnLeft(_entity:CharacterBody2D=null)->void:
 
 
 
-## Calculates movement depending on the context
-#func _get_movement(fric: float, accel: float, delta: float):
-	#var direction = Input.get_axis("Move_Left", "Move_Right")
-	#var walkingInfluence
-	#if direction:
-		#walkingInfluence = sign(direction) * accel * delta * 100
-		## if not at max speed 
-		## if sign(direction) != sign(velocity.x) or (not velocity.x < -max_speed and not velocity.x > max_speed):
-		#if (not velocity.x < -max_speed and not velocity.x > max_speed):
-			#velocity.x += walkingInfluence
-		#else:
-			#velocity.x = move_toward(velocity.x, max_speed, fric * delta * 100)
-	#else:
-		#velocity.x = move_toward(velocity.x, 0, fric * delta * 100)
 
 
 
@@ -163,7 +135,6 @@ func turnLeft(_entity:CharacterBody2D=null)->void:
 # Adds the player's jump velocity if able
 func jump(entity:CharacterBody2D):
 	entity.velocity.y = jumpVelocity
-#func moveToward(entity:CharacterBody2D, delta:float, target:Vector2):
 
 func jumpContinous(entity:CharacterBody2D, delta:float):
 	entity.velocity.y += jumpVelocityContinous * delta
@@ -174,7 +145,6 @@ func jumpContinous(entity:CharacterBody2D, delta:float):
 
 #region Environment Awareness
 func isCloseToWall(_entity:CharacterBody2D) -> bool:
-#func isCloseToWall(_entity:CharacterBody2D?=null) -> bool:
 	return $WallCheckRay.is_colliding()
 
 func isCloseToLedge(entity:CharacterBody2D) -> bool:

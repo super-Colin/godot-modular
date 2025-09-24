@@ -2,19 +2,19 @@
 
 [ext_resource type="Script" uid="uid://d1ovaemjvkl0m" path="res://modules/creature.gd" id="1_ix1bv"]
 [ext_resource type="Texture2D" uid="uid://bounywkiolcby" path="res://ogre-all.png" id="2_mcvmj"]
-[ext_resource type="PackedScene" uid="uid://bgdm50ecqlhsg" path="res://modules/health/health.tscn" id="2_svv8x"]
+[ext_resource type="PackedScene" uid="uid://bgdm50ecqlhsg" path="res://modules/damage/health.tscn" id="2_svv8x"]
 [ext_resource type="Script" uid="uid://bw5nreahk2ofv" path="res://modules/behavior/behavior.gd" id="4_86g6j"]
 [ext_resource type="PackedScene" uid="uid://dyg4t1y55naly" path="res://modules/gravity/gravity.tscn" id="4_lubli"]
 [ext_resource type="Script" uid="uid://c3c0ce6e4urrx" path="res://modules/movement/movement.gd" id="5_loe3y"]
 [ext_resource type="PackedScene" uid="uid://bp2nrpbc3vghn" path="res://modules/damage/damage.tscn" id="6_86g6j"]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30vht"]
+radius = 24.0
+height = 54.0
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_loe3y"]
 radius = 19.0
 height = 72.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mcvmj"]
-radius = 32.0
-height = 96.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_svv8x"]
 atlas = ExtResource("2_mcvmj")
@@ -161,11 +161,20 @@ animations = [{
 }]
 
 [node name="CreatureTemplate" type="CharacterBody2D"]
+collision_layer = 2
 script = ExtResource("1_ix1bv")
 
 [node name="Gravity" parent="." instance=ExtResource("4_lubli")]
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 14)
+shape = SubResource("CapsuleShape2D_30vht")
+
 [node name="Health" parent="." instance=ExtResource("2_svv8x")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Health"]
+position = Vector2(0, 14)
+shape = SubResource("CapsuleShape2D_30vht")
 
 [node name="Behavior" type="Node2D" parent="."]
 script = ExtResource("4_86g6j")
@@ -190,9 +199,6 @@ position = Vector2(47, 10)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Damage"]
 shape = SubResource("CapsuleShape2D_loe3y")
 debug_color = Color(0.906318, 0.26141, 0.400066, 0.42)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CapsuleShape2D_mcvmj")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_t2qxm")

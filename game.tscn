@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://m1e6ht11kxf4"]
+[gd_scene load_steps=5 format=3 uid="uid://m1e6ht11kxf4"]
 
 [ext_resource type="PackedScene" uid="uid://cm6lt5xs6rp36" path="res://modules/creature_template.tscn" id="1_80nbo"]
 [ext_resource type="PackedScene" uid="uid://nk3do2ojew8w" path="res://food.tscn" id="2_e2o6t"]
+[ext_resource type="Script" uid="uid://ddybqjxsam8gt" path="res://debug_window.gd" id="3_feb5d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e2o6t"]
 size = Vector2(1102, 20)
@@ -9,7 +10,7 @@ size = Vector2(1102, 20)
 [node name="Game" type="Node2D"]
 
 [node name="CreatureTemplate" parent="." instance=ExtResource("1_80nbo")]
-position = Vector2(412, 306)
+position = Vector2(244, 555)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
@@ -18,4 +19,17 @@ position = Vector2(580, 604)
 shape = SubResource("RectangleShape2D_e2o6t")
 
 [node name="Food" parent="." instance=ExtResource("2_e2o6t")]
-position = Vector2(725, 460)
+position = Vector2(877, 421)
+
+[node name="DebugPane" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_feb5d")
+
+[node name="Label" type="Label" parent="DebugPane"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "FPS: 22"

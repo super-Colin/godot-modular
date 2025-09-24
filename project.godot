@@ -18,6 +18,14 @@ config/features=PackedStringArray("4.4", "GL Compatibility")
 
 Food=""
 
+[layer_names]
+
+2d_physics/layer_1="Ground"
+2d_physics/layer_2="Creature 1"
+2d_physics/layer_3="Creature 2"
+2d_physics/layer_4="Health"
+2d_physics/layer_5="Interactable"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
