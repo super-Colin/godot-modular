@@ -12,11 +12,22 @@ config_version=5
 
 config/name="Monsters Module"
 run/main_scene="uid://m1e6ht11kxf4"
-config/features=PackedStringArray("4.4", "GL Compatibility")
+config/features=PackedStringArray("4.5", "GL Compatibility")
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/ai_assistant_hub/plugin.cfg")
 
 [global_group]
 
 Food=""
+
+[input]
+
+click={
+"deadzone": 0.2,
+"events": []
+}
 
 [layer_names]
 
@@ -25,6 +36,13 @@ Food=""
 2d_physics/layer_3="Creature 2"
 2d_physics/layer_4="Health"
 2d_physics/layer_5="Interactable"
+
+[plugins]
+
+ai_assistant_hub/llm_api="ollama_api"
+ai_assistant_hub/preferences/thinking_target=0
+ai_assistant_hub/preferences/skip_greeting=false
+ai_assistant_hub/preferences/always_scroll_to_bottom=false
 
 [rendering]
 

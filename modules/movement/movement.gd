@@ -1,158 +1,102 @@
-extends Node2D
+class_name MovementComponent2D
+extends ComponentNode2D
 
-enum MovementTypes {
-	NONE,
-	WALK,
-	RUN,
-	FLY
-}
+
+#region Component Contracts
+var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add influence
+#endregion Component Contracts
 
 
 #region Exports
-@export_group("Movement Types")
-#@export var movementTypes: MovementTypes = MovementTypes.WALK
-
 @export_group("Jumping")
 @export var canJump:bool = true
 @export var jumpVelocity = 200
-@export var accelerationAir: float = 5.0
-@export var frictionAir: float = 50.0
-@export var maxSpeedAir: float = 400.0
 @export_subgroup("Continous Jump")
+## Can hold and release jump for variable jump height
 @export var canContinousJump:bool = false
+@export var canContinousJumpLength:float = 0.5
 @export var jumpVelocityContinous = 40
-
-
-
-@export_group("Walking")
-@export var maxSpeed: float = 400.0
-@export var acceleration: float = 100.0
-@export var friction: float = 50.0
-
-
-
+@export_group("Gravity")
+@export var gravity_enabled: bool = true
+@export var gravity_use_default: bool = true
+@export var gravity_force: float = 500.0  # pixels/sec^2
+@export var max_fall_speed: float = 1000.0
+@export var gravity_multiplier: float = 1.0
 #endregion Exports
 
-
-
-#region Variables
-
-var direction: Vector2 = Vector2.ZERO
-
-
-#endregion Variables
 #region Signals
-signal s_hitWall
-signal s_hitLedge
+#signal gravity_changed(new_gravity: float) # Emitted when gravity value changes
+signal movement_direction_changed(direction: Vector2) # Emitted when movement direction changes
 #endregion Signals
 
 
+#region Internal-Variables
+var is_moving: bool = false # Flag to track if character is currently moving
+var is_jumping: bool = false # Flag to track if character is currently jumping upward
+#endregion Internal-Variables
 
-#region Movement Logic
-
-func setDirection(newDirection: Vector2) -> void:
-	direction = newDirection.normalized()
-
-func moveForward(entity:CharacterBody2D, delta: float) -> void:
-	var dir = entity.getFacingDirection()
-	if direction == Vector2.ZERO:
-		entity.velocity = entity.velocity.move_toward(Vector2.ZERO, friction * delta)
-	else:
-		entity.velocity = entity.velocity.move_toward(direction * maxSpeed, acceleration * delta)
+## Called in the parent modular entity's _ready() function
+func init_component(player_controlled:bool=false):
+	_init_component(player_controlled)
+	if gravity_use_default:
+		gravity_force = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 
 
 
 
 
-
-func playerControl(entity:CharacterBody2D, delta:float)->void:
-	# run each frame
-	#if Input.is_action_pressed("Move_Jump"):
-		#if onFloor:
-			#jump()
-	return
-
-func aiControl(entity:CharacterBody2D, delta:float, target)->void:
-	var targetPosition = Vector2.ZERO
-	if target is Node:
-		#print("movement - target is node")
-		targetPosition = entity.global_position - target.global_position
-	elif target is Vector2:
-		#print("movement - target is vector")
-		targetPosition = target
-	moveToward(entity, delta, targetPosition)
-
-func moveToward(entity:CharacterBody2D, delta:float, target:Vector2)->void:
-	#print("movement - target is: ", target)
-	var accel = acceleration
-	var fric = friction
-	if isCloseToWall(entity):
-		s_hitWall.emit()
-	elif isCloseToLedge(entity):
-		s_hitWall.emit()
-	if not entity.is_on_floor():
-		accel = accelerationAir
-		fric = frictionAir
-	if not abs(entity.velocity.x) > abs(maxSpeed):
-		var walkingInfluence = sign(target.normalized().x) * accel * delta * 100
-		entity.velocity.x += walkingInfluence
-		#print("movement - moving too fast: ", entity.velocity.x, " > ", maxSpeed)
-		#print("enemy - too fast.. velocity: ", velocity)
-		#entity.velocity.x = move_toward(entity.velocity.x, maxSpeed, fric * delta * 100)
-	elif target == Vector2.ZERO:
-		entity.velocity.x = 0
-	else:
-		entity.velocity.x = move_toward(entity.velocity.x, 0, fric * delta * 500)
+func tick_physics(delta: float) -> void:
+	#_tick_physics(delta)
+	velocity_influence = calc_veloctiy_influence(delta)
 
 
-
-func turnRight()->void:
-	$WallCheckRay.target_position.x = abs($WallCheckRay.target_position.x)
-	$LedgeCheckRay.target_position.x = abs($LedgeCheckRay.target_position.x)
-
-func turnLeft()->void:
-	$WallCheckRay.target_position.x = -abs($WallCheckRay.target_position.x)
-	$LedgeCheckRay.target_position.x = -abs($LedgeCheckRay.target_position.x)
-
-
-
-
-#endregion Movement Logic
+func calc_veloctiy_influence(delta: float)->Vector2:
+	var input_x_influence = Input.get_axis("ui_left", "ui_right")
+	var movement = input_x_influence * delta
+	return Vector2.ZERO
 
 
 
 
 
 
+func calc_gravity_influence1(delta:float) -> Vector2:
+	if not gravity_enabled:
+		return Vector2.ZERO
+	# TODO: Implement gravity calculation based on gravity_enabled flag
+	# The calculation should consider:
+	# - Current velocity and time delta
+	# - Maximum falling speed limit
+	# - Whether the character is jumping or falling
+	var gravity_effect = Vector2.ZERO
+	# TODO: Add actual gravity physics calculation here
+	# This should accumulate downward force over time when falling
+	# and reset when the character hits the ground using _entity.is_on_floor()
+	return gravity_effect
+
+
+
+func calc_gravity_influence(delta:float) -> Vector2:
+	if not gravity_enabled:
+		return Vector2.ZERO
+	
+	var gravity_effect = Vector2.ZERO
+	
+	# Apply gravitational force based on time delta and gravity strength
+	gravity_effect.y += gravity_force * delta
+	
+	# Limit maximum falling speed
+	if gravity_effect.y > max_fall_speed:
+		gravity_effect.y = max_fall_speed
+	
+	return gravity_effect
 
 
 
 
-#region Jumping
-
-
-# Adds the player's jump velocity if able
-func jump(entity:CharacterBody2D):
-	entity.velocity.y = jumpVelocity
-
-func jumpContinous(entity:CharacterBody2D, delta:float):
-	entity.velocity.y += jumpVelocityContinous * delta
-
-
-#endregion Jumping
-
-
-#region Environment Awareness
-func isCloseToWall(_entity:CharacterBody2D) -> bool:
-	return $WallCheckRay.is_colliding()
-
-func isCloseToLedge(entity:CharacterBody2D) -> bool:
-	return entity.is_on_floor() and not $LedgeCheckRay.is_colliding()
-#endregion Environment Awareness
-
-
-
+#func get_project_gravity()->Vector2:
+	#return ProjectSettings.get_setting("physics/2d/default_gravity_vector") * ProjectSettings.get_setting("physics/2d/default_gravity")
 
 
 
