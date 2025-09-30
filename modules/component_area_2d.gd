@@ -36,9 +36,13 @@ func tick_physics(_delta: float) -> void:
 
 
 func face_left():
+	_face_left()
+func _face_left():
 	_collision_shape.position.x = abs(_collision_shape.position.x) * -1
 
 func face_right():
+	_face_right()
+func _face_right():
 	_collision_shape.position.x = abs(_collision_shape.position.x)
 
 

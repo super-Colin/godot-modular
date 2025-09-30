@@ -28,4 +28,8 @@ offset_bottom = 23.0
 text = "FPS: 22"
 
 [node name="ModularEntity" parent="." instance=ExtResource("3_fc0e3")]
-position = Vector2(374, 469)
+position = Vector2(754, 500)
+
+[node name="ModularEntity2" parent="." instance=ExtResource("3_fc0e3")]
+position = Vector2(592, 415)
+player_controlled = false

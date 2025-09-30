@@ -54,12 +54,10 @@ func init_component(player_controlled:bool=false):
 	_init_component(player_controlled)
 
 
-func tick_physics(delta: float) -> void:
-	#print("damage - ?: ")
+func tick_physics(_delta: float) -> void:
 	if _player_controlled:
-		#print("damage - pressing attack?: ", input_name)
 		if Input.is_action_just_pressed(input_name):
-			print("damage - pressed attack...")
+			#print("damage - pressed attack...")
 			attack()
 
 

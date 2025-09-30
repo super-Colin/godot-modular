@@ -56,7 +56,7 @@ func _physics_process(delta: float) -> void:
 
 
 #region Public API
-func move_towards(position: Vector2) -> void:
+func move_towards(direction: Vector2) -> void:
 	target_position = position
 	moving = true
 
@@ -128,7 +128,7 @@ func stop() -> void:
 #
 #
 ##region Movement Logic
-#
+
 #func setDirection(newDirection: Vector2) -> void:
 	#direction = newDirection.normalized()
 #

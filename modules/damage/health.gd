@@ -20,20 +20,20 @@ var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add in
 #endregion Exports
 
 #region Signals
-signal health_changed(previous:float, new:float)
-signal damaged(amount:float)
-signal died(destroy:bool)
+signal s_health_changed(previous:float, new:float)
+signal s_damaged(amount:float)
+signal s_died(destroy:bool)
 #endregion Signals
 
 #region Internal State
-var current_health: int
+@onready var current_health: float = max_health
 var dead: bool = false
 var invulnerable: bool = false
 #endregion Internal State
 
 
 #func _ready() -> void:
-	#_init()
+	#__ready()
 	#area_entered.connect(_area_entered)
 	#area_exited.connect(_area_exited)
 
@@ -55,13 +55,19 @@ func init_component(player_controlled:bool=false):
 
 
 func take_hit(damage_source:DamageComponent2D): # Component Contract
+	print("Health - taking hit: ", damage_source)
 	if invulnerable:
 		return
-	# check for knockback
-	# velocity_influence
-	current_health -= damage_source.damage_amount
+	#velocity_influence from knockback?
+	var new_health = current_health - damage_source.damage_amount
+	s_damaged.emit(damage_source.damage_amount)
+	s_health_changed.emit(current_health, new_health)
+	current_health = new_health
 	if current_health <= 0.0:
-		died.emit(destroy_on_death)
+		s_died.emit(destroy_on_death)
+	if invulnerable_on_hit:
+		invulnerable = true
+		get_tree().create_timer(invulnerable_on_hit_length).timeout.connect(func():invulnerable = false)
 
 
 

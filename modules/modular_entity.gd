@@ -50,9 +50,9 @@ func connect_component_signals():
 			damage = components[key]
 	# Connect signals
 	if health:
-		health.died.connect(died)
+		health.s_died.connect(died)
 	if movement:
-		movement.movement_direction_changed.connect(face_direction)
+		movement.s_movement_direction_changed.connect(face_direction)
 #endregion Component Setup
 
 
