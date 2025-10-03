@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://nk3do2ojew8w"]
 
-[ext_resource type="PackedScene" uid="uid://bgdm50ecqlhsg" path="res://modules/damage/health1.tscn" id="1_8txok"]
-[ext_resource type="Script" uid="uid://drw3qttj8hvyf" path="res://modules/item.gd" id="1_q6vj8"]
-[ext_resource type="PackedScene" uid="uid://dyg4t1y55naly" path="res://modules/gravity/gravity.tscn" id="2_pohk7"]
-[ext_resource type="PackedScene" uid="uid://b58fqhfcyq3la" path="res://modules/interactable/interactable.tscn" id="4_v8piq"]
+[ext_resource type="PackedScene" uid="uid://bgdm50ecqlhsg" path="res://modular_entities/damage/health1.tscn" id="1_8txok"]
+[ext_resource type="Script" uid="uid://d1ovaemjvkl0m" path="res://modular_entities/modular_entity.gd" id="1_q6vj8"]
+[ext_resource type="PackedScene" uid="uid://wbx67x7ig4nc" path="res://modular_entities/movement/movement.tscn" id="4_5fm71"]
+[ext_resource type="PackedScene" uid="uid://b58fqhfcyq3la" path="res://modular_entities/interactable/interactable.tscn" id="4_v8piq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pohk7"]
 size = Vector2(40, 40)
@@ -11,6 +11,7 @@ size = Vector2(40, 40)
 [node name="Food" type="CharacterBody2D" groups=["Food"]]
 collision_layer = 0
 script = ExtResource("1_q6vj8")
+groups = Array[int]([2])
 
 [node name="Health" parent="." instance=ExtResource("1_8txok")]
 
@@ -29,8 +30,9 @@ offset_right = 20.0
 offset_bottom = 20.0
 size_flags_horizontal = 0
 size_flags_vertical = 4
-
-[node name="Gravity" parent="." instance=ExtResource("2_pohk7")]
+color = Color(0.9052573, 0.39322096, 1.5209317e-05, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_pohk7")
+
+[node name="Movement" parent="." instance=ExtResource("4_5fm71")]

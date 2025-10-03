@@ -16,7 +16,6 @@ var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add in
 @export var invulnerable_always: bool = false
 @export var invulnerable_on_hit: bool = true
 @export var invulnerable_on_hit_length: float = 0.5
-
 #endregion Exports
 
 #region Signals

@@ -21,7 +21,8 @@ func __ready():
 	_collision_starting_position = _collision_shape.position
 	_entity.connect_component($'.')
 
-
+func init_component(player_controlled:bool=false):
+	_init_component(player_controlled)
 func _init_component(player_controlled:bool=false):
 	_player_controlled = player_controlled
 	print("Component Area - ", _get_component_id(), " init'd, belongs to: ", _entity)

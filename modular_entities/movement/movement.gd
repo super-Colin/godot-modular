@@ -36,9 +36,16 @@ signal s_movement_direction_changed(direction: Vector2) # Emitted when movement 
 #region Internal-Variables
 var is_moving: bool = false # Flag to track if character is currently moving
 var is_jumping: bool = false # Flag to track if character is currently jumping upward
-var target_position: Vector2 = Vector2.ZERO
+var target_global_position: Vector2 = Vector2.ZERO
 var target_direction: Vector2 = Vector2.ZERO
 #endregion Internal-Variables
+
+
+func update_target(new_global_position):
+	target_global_position = new_global_position
+
+
+
 
 
 ## Called in the parent modular entity's _ready() function
@@ -59,7 +66,7 @@ func tick_physics(delta: float) -> void:
 		target_direction = Vector2(input_x_influence * 10000, 0)
 		move_towards( Vector2(input_x_influence, 0), delta)
 	else:
-		move_towards(target_position, delta)
+		move_towards_target(delta)
 	apply_gravity(delta)
 	#print("movement - velocity_influence: ", velocity_influence)
 
@@ -68,13 +75,14 @@ func apply_gravity(delta):
 	velocity_influence.y += gravity_force * delta
 
 
-#func move_towards_target(delta: float) -> void:
-	#pass
+func move_towards_target(delta: float) -> void:
+	move_towards($'.'.global_position - target_global_position, delta)
+
 
 func move_towards(target: Vector2, delta: float) -> void:
 	#print("movement - moving toward: ", target)
 	check_if_direction_changed(target)
-	target_position = target
+	#target_position = target
 	velocity_influence.x = target.normalized().x * delta * max_speed
 	if target == Vector2.ZERO:
 		is_moving = false
@@ -84,9 +92,9 @@ func move_towards(target: Vector2, delta: float) -> void:
 func check_if_direction_changed(direction: Vector2) -> bool:
 	if direction.x == 0:
 		return false
-	if direction.x > 0 and target_position.x > 0:
+	if direction.x > 0 and target_global_position.x > 0:
 		return false
-	elif direction.x < 0 and target_position.x < 0:
+	elif direction.x < 0 and target_global_position.x < 0:
 		return false
 	s_movement_direction_changed.emit(direction)
 	return true

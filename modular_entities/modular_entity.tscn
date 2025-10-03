@@ -1,93 +1,89 @@
-[gd_scene load_steps=28 format=3 uid="uid://cm6lt5xs6rp36"]
+[gd_scene load_steps=27 format=3 uid="uid://cgliavohnuo5o"]
 
-[ext_resource type="Script" uid="uid://d1ovaemjvkl0m" path="res://modules/modular_entity.gd" id="1_ix1bv"]
-[ext_resource type="Texture2D" uid="uid://bounywkiolcby" path="res://ogre-all.png" id="2_mcvmj"]
-[ext_resource type="PackedScene" uid="uid://bgdm50ecqlhsg" path="res://modules/damage/health1.tscn" id="2_svv8x"]
-[ext_resource type="Script" uid="uid://bw5nreahk2ofv" path="res://modules/behavior/behavior.gd" id="4_86g6j"]
-[ext_resource type="Script" uid="uid://c3c0ce6e4urrx" path="res://modules/movement/movement.gd" id="5_loe3y"]
-[ext_resource type="PackedScene" uid="uid://bp2nrpbc3vghn" path="res://modules/damage/damage.tscn" id="6_86g6j"]
+[ext_resource type="Script" uid="uid://d1ovaemjvkl0m" path="res://modular_entities/modular_entity.gd" id="1_ed3ws"]
+[ext_resource type="PackedScene" uid="uid://wbx67x7ig4nc" path="res://modular_entities/movement/movement.tscn" id="2_8aaey"]
+[ext_resource type="Texture2D" uid="uid://bounywkiolcby" path="res://ogre-all.png" id="3_rkebj"]
+[ext_resource type="PackedScene" uid="uid://eq5ikm8yjwga" path="res://modular_entities/damage/health.tscn" id="4_0dde2"]
+[ext_resource type="PackedScene" uid="uid://bp2nrpbc3vghn" path="res://modular_entities/damage/damage.tscn" id="5_pp1ee"]
+[ext_resource type="PackedScene" uid="uid://dtp8iohq877ol" path="res://modular_entities/damage/behavior.tscn" id="6_sxh75"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_30vht"]
-radius = 24.0
-height = 54.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_loe3y"]
-radius = 19.0
-height = 72.0
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ed3ws"]
+radius = 17.0
+height = 52.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_svv8x"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(0, 160, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h08jv"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(144, 160, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lubli"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(288, 160, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_glynq"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(432, 160, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_86g6j"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(576, 160, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_loe3y"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(720, 160, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gx0wq"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(864, 160, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nuqnr"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(1008, 160, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aeff8"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(0, 80, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hlly0"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(144, 80, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gnb4r"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(288, 80, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vyshd"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(432, 80, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kgfjh"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(0, 0, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xsdfh"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(144, 0, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u3akf"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(288, 0, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7lmdq"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(432, 0, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jinqe"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(576, 0, 144, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g10c0"]
-atlas = ExtResource("2_mcvmj")
+atlas = ExtResource("3_rkebj")
 region = Rect2(720, 0, 144, 80)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_t2qxm"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_0dde2"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -159,49 +155,36 @@ animations = [{
 "speed": 4.0
 }]
 
-[node name="CreatureTemplate" type="CharacterBody2D"]
-collision_layer = 2
-script = ExtResource("1_ix1bv")
+[node name="ModularEntity" type="CharacterBody2D"]
+script = ExtResource("1_ed3ws")
+groups = Array[int]([0])
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 14)
-shape = SubResource("CapsuleShape2D_30vht")
+[node name="Behavior" parent="." instance=ExtResource("6_sxh75")]
 
-[node name="Health" parent="." instance=ExtResource("2_svv8x")]
+[node name="Movement" parent="." instance=ExtResource("2_8aaey")]
+
+[node name="Health" parent="." instance=ExtResource("4_0dde2")]
+collision_layer = 8
+collision_mask = 0
+destroy_on_death = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Health"]
-position = Vector2(0, 14)
-shape = SubResource("CapsuleShape2D_30vht")
+position = Vector2(0, 11)
+shape = SubResource("CapsuleShape2D_ed3ws")
+debug_color = Color(0.94728583, 2.5990605e-06, 0.5861348, 0.41960785)
 
-[node name="Behavior" type="Node2D" parent="."]
-script = ExtResource("4_86g6j")
-
-[node name="LineOfSightRay" type="RayCast2D" parent="Behavior"]
-target_position = Vector2(198, 0)
-collision_mask = 2
-
-[node name="Movement" type="Node2D" parent="."]
-script = ExtResource("5_loe3y")
-
-[node name="LedgeCheckRay" type="RayCast2D" parent="Movement"]
-target_position = Vector2(65, 85)
-
-[node name="WallCheckRay" type="RayCast2D" parent="Movement"]
-position = Vector2(0, 37)
-target_position = Vector2(44, 0)
-
-[node name="Damage" parent="." instance=ExtResource("6_86g6j")]
-position = Vector2(47, 10)
+[node name="Damage" parent="." instance=ExtResource("5_pp1ee")]
+input_name = "ui_left"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Damage"]
-shape = SubResource("CapsuleShape2D_loe3y")
-debug_color = Color(0.906318, 0.26141, 0.400066, 0.42)
+position = Vector2(42, 13)
+shape = SubResource("CapsuleShape2D_ed3ws")
+debug_color = Color(0.99999994, 0.020813566, 0.07496395, 0.41960785)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 11)
+shape = SubResource("CapsuleShape2D_ed3ws")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_t2qxm")
+sprite_frames = SubResource("SpriteFrames_0dde2")
 animation = &"walking"
-frame_progress = 0.833248
-metadata/_edit_lock_ = true
-
-[node name="PointOfInterest" type="Marker2D" parent="."]
-position = Vector2(199, 1)

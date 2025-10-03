@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtp8iohq877ol"]
+
+[ext_resource type="Script" uid="uid://bw5nreahk2ofv" path="res://modular_entities/behavior/behavior.gd" id="1_k8ji1"]
+
+[node name="Behavior" type="Node2D"]
+script = ExtResource("1_k8ji1")
+
+[node name="LineOfSightRay" type="RayCast2D" parent="."]
+target_position = Vector2(198, 0)
+collision_mask = 2
+
+[node name="TargetMarker" type="Marker2D" parent="."]
+position = Vector2(202, 0)

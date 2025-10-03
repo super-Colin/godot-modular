@@ -2,9 +2,16 @@ class_name ModularEntity2D
 extends CharacterBody2D
 #extends Area2D
 
+
+#enum CommonGroups {CREATURE_PREDATOR, CREATURE_PREY, PLANT_, PLANT_FOOD, FOOD}
+
+# $'.'.is_in_group("name")
+
+
 #region Exports
 #@export_group("Jumping")
-@export var player_controlled:bool = true
+@export var player_controlled:bool = false
+@export var groups:Array[Modular.Types] = []
 #endregion Exports
 
 
@@ -13,11 +20,19 @@ var components: Dictionary = {}
 
 
 
+func _add_self_to_groups():
+	for group in groups:
+		print("group - ", group)
+	#$'.'.is_in_group(str(Modular.Types.CREATURE))
+	$'.'.is_in_group(Modular.Groups[Modular.Types.CREATURE])
+
+
 
 func _ready() -> void:
 	for key in components.keys():
 		components[key].init_component(player_controlled)
 	connect_component_signals()
+	
 	print("entity - componets: ", components)
 
 
@@ -40,6 +55,7 @@ func connect_component_signals():
 	var movement: MovementComponent2D
 	var health: HealthComponent2D
 	var damage: DamageComponent2D
+	var behavior: BehaviorComponent2D
 	# Sort out components
 	for key in components:
 		if components[key] is MovementComponent2D:
@@ -48,11 +64,19 @@ func connect_component_signals():
 			health = components[key]
 		elif components[key] is DamageComponent2D:
 			damage = components[key]
+		elif components[key] is BehaviorComponent2D:
+			behavior = components[key]
 	# Connect signals
 	if health:
 		health.s_died.connect(died)
 	if movement:
 		movement.s_movement_direction_changed.connect(face_direction)
+	if behavior:
+		if damage:
+			damage.s_health_area_entered.connect(behavior._health_area_entered_damage_area)
+			behavior.s_trigger_attack.connect(damage.attack)
+		if movement:
+			behavior.s_target_moved.connect(movement.update_target)
 #endregion Component Setup
 
 
@@ -75,6 +99,10 @@ func connect_component(component):
 func died(destroy:bool=true):
 	if destroy:
 		$'.'.queue_free()
+
+func _health_area_entered(area):
+	if area:
+		print("health area entered")
 
 #endregion Health Related
 

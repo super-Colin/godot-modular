@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://m1e6ht11kxf4"]
+[gd_scene load_steps=5 format=3 uid="uid://m1e6ht11kxf4"]
 
-[ext_resource type="PackedScene" uid="uid://cgliavohnuo5o" path="res://modules/modular_entity.tscn" id="3_fc0e3"]
+[ext_resource type="PackedScene" uid="uid://nk3do2ojew8w" path="res://food.tscn" id="2_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://cgliavohnuo5o" path="res://modular_entities/modular_entity.tscn" id="3_fc0e3"]
 [ext_resource type="Script" uid="uid://ddybqjxsam8gt" path="res://debug_window.gd" id="3_feb5d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e2o6t"]
-size = Vector2(1102, 20)
+size = Vector2(1113, 58)
 
 [node name="Game" type="Node2D"]
 
@@ -28,8 +29,22 @@ offset_bottom = 23.0
 text = "FPS: 22"
 
 [node name="ModularEntity" parent="." instance=ExtResource("3_fc0e3")]
-position = Vector2(754, 500)
+position = Vector2(267, 284)
 
 [node name="ModularEntity2" parent="." instance=ExtResource("3_fc0e3")]
 position = Vector2(592, 415)
-player_controlled = false
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(-90, 401)
+shape = SubResource("RectangleShape2D_e2o6t")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+position = Vector2(1476, 574)
+shape = SubResource("RectangleShape2D_e2o6t")
+
+[node name="Food" parent="." instance=ExtResource("2_e2o6t")]
+position = Vector2(1002, 335)
