@@ -1,13 +1,39 @@
-[gd_scene load_steps=2 format=3 uid="uid://dtp8iohq877ol"]
+[gd_scene load_steps=4 format=3 uid="uid://dtp8iohq877ol"]
 
 [ext_resource type="Script" uid="uid://bw5nreahk2ofv" path="res://modular_entities/behavior/behavior.gd" id="1_k8ji1"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_sxg83"]
+radius = 250.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2kbrm"]
+radius = 600.0
+
 [node name="Behavior" type="Node2D"]
 script = ExtResource("1_k8ji1")
+primary_target_group = null
 
 [node name="LineOfSightRay" type="RayCast2D" parent="."]
-target_position = Vector2(198, 0)
-collision_mask = 2
+target_position = Vector2(300, 0)
+collision_mask = 31
 
 [node name="TargetMarker" type="Marker2D" parent="."]
-position = Vector2(202, 0)
+position = Vector2(300, 0)
+
+[node name="Alert" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Alert"]
+shape = SubResource("CircleShape2D_sxg83")
+debug_color = Color(0.77254903, 0, 0, 0.1882353)
+
+[node name="Forget" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Forget"]
+shape = SubResource("CircleShape2D_2kbrm")
+debug_color = Color(0, 0.79607844, 0, 0.12156863)
+
+[node name="Sight" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 31
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sight"]
+polygon = PackedVector2Array(0, 0, 380, -286, 390, 311)

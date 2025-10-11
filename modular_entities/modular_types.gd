@@ -3,7 +3,7 @@ extends Node
 
 
 
-enum Types {CREATURE, PLANT, FOOD, ITEM, LOOT, EASTER_EGG}
+enum Types {CREATURE, PLANT, FOOD, ITEM, LOOT, COLLECTABLE}
 
 
 const Groups = { # These can be added to the editor Project Settings for convience
@@ -11,7 +11,18 @@ const Groups = { # These can be added to the editor Project Settings for convien
 	Types.PLANT : "Plant",
 	Types.FOOD : "Food",
 	Types.LOOT : "Loot",
-	Types.EASTER_EGG : "Easter Egg",
+	Types.COLLECTABLE : "Collectable",
 }
+
+
+
+
+
+
+
+
+
+
+
 
 #EntityTypes.Groups

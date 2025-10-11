@@ -160,6 +160,11 @@ script = ExtResource("1_ed3ws")
 groups = Array[int]([0])
 
 [node name="Behavior" parent="." instance=ExtResource("6_sxh75")]
+alert_range = 250.0
+forget_range = 600.0
+target_groups = Array[int]([2])
+vision_range = 500.0
+vision_angle = 70.0
 
 [node name="Movement" parent="." instance=ExtResource("2_8aaey")]
 

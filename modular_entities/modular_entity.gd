@@ -1,15 +1,9 @@
 class_name ModularEntity2D
 extends CharacterBody2D
-#extends Area2D
 
-
-#enum CommonGroups {CREATURE_PREDATOR, CREATURE_PREY, PLANT_, PLANT_FOOD, FOOD}
-
-# $'.'.is_in_group("name")
 
 
 #region Exports
-#@export_group("Jumping")
 @export var player_controlled:bool = false
 @export var groups:Array[Modular.Types] = []
 #endregion Exports
@@ -20,24 +14,29 @@ var components: Dictionary = {}
 
 
 
-func _add_self_to_groups():
+func add_self_to_groups():
 	for group in groups:
 		print("group - ", group)
-	#$'.'.is_in_group(str(Modular.Types.CREATURE))
-	$'.'.is_in_group(Modular.Groups[Modular.Types.CREATURE])
+	$'.'.is_in_modular_group(Modular.Types.CREATURE)
 
+func is_in_modular_group(group_type:Modular.Types):
+	return $'.'.is_in_group(Modular.Groups[group_type])
 
 
 func _ready() -> void:
+	__ready() # if _ready is overwritten be sure to call __ready in it
+
+func __ready() -> void:
 	for key in components.keys():
 		components[key].init_component(player_controlled)
+	add_self_to_groups()
 	connect_component_signals()
-	
 	print("entity - componets: ", components)
 
 
 func _process(delta: float) -> void:
 	for key in components.keys():
+		#print("entity - _process key: ", key, ", node: ", components[key])
 		components[key].tick_process(delta)
 
 
@@ -77,6 +76,8 @@ func connect_component_signals():
 			behavior.s_trigger_attack.connect(damage.attack)
 		if movement:
 			behavior.s_target_moved.connect(movement.update_target)
+			#behavior.s_target_changed.connect(movement.update_target)
+			
 #endregion Component Setup
 
 
@@ -117,13 +118,15 @@ func face_direction(direction:Vector2):
 func face_left():
 	for key in components.keys():
 		if components[key].has_method("face_left"): components[key].face_left()
-	$Sprite.flip_h = true
+	if $'.'.has_node("Sprite"):
+		$Sprite.flip_h = true
 
 
 func face_right():
 	for key in components.keys():
 		if components[key].has_method("face_right"): components[key].face_right()
-	$Sprite.flip_h = false
+	if $'.'.has_node("Sprite"):
+		$Sprite.flip_h = false
 
 #endregion Movement Related
 

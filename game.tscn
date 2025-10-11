@@ -30,6 +30,7 @@ text = "FPS: 22"
 
 [node name="ModularEntity" parent="." instance=ExtResource("3_fc0e3")]
 position = Vector2(267, 284)
+player_controlled = true
 
 [node name="ModularEntity2" parent="." instance=ExtResource("3_fc0e3")]
 position = Vector2(592, 415)
@@ -47,4 +48,4 @@ position = Vector2(1476, 574)
 shape = SubResource("RectangleShape2D_e2o6t")
 
 [node name="Food" parent="." instance=ExtResource("2_e2o6t")]
-position = Vector2(1002, 335)
+position = Vector2(962, 340)

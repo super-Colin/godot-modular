@@ -39,6 +39,7 @@ var invulnerable: bool = false
 ## Called in the parent modular entity's _ready() function
 func init_component(player_controlled:bool=false):
 	_init_component(player_controlled)
+	collision_layer
 
 
 

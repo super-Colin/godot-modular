@@ -43,6 +43,7 @@ var target_direction: Vector2 = Vector2.ZERO
 
 func update_target(new_global_position):
 	target_global_position = new_global_position
+	print("movement - target updated: ", new_global_position)
 
 
 
@@ -67,6 +68,7 @@ func tick_physics(delta: float) -> void:
 		move_towards( Vector2(input_x_influence, 0), delta)
 	else:
 		move_towards_target(delta)
+		#print($'.', " - moving toward: ", target_global_position)
 	apply_gravity(delta)
 	#print("movement - velocity_influence: ", velocity_influence)
 
@@ -76,6 +78,8 @@ func apply_gravity(delta):
 
 
 func move_towards_target(delta: float) -> void:
+	if target_global_position == Vector2.ZERO:
+		return
 	move_towards($'.'.global_position - target_global_position, delta)
 
 
