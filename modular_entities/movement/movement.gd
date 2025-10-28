@@ -10,7 +10,7 @@ var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add in
 #region Exports
 @export var max_speed: float = 400.0
 @export var acceleration: float = 100.0
-@export var friction: float = 50.0
+@export var friction: float = 500.0
 @export_group("Jumping")
 @export var canJump:bool = true
 @export var jumpVelocity = 200
@@ -62,6 +62,8 @@ func init_component(player_controlled:bool=false):
 
 func tick_physics(delta: float) -> void:
 	velocity_influence = Vector2.ZERO
+	is_moving = false
+	var friction_influence = apply_friction(delta)
 	if _player_controlled:
 		var input_x_influence = Input.get_axis("ui_left", "ui_right")
 		target_direction = Vector2(input_x_influence * 10000, 0)
@@ -70,11 +72,23 @@ func tick_physics(delta: float) -> void:
 		move_towards_target(delta)
 		#print($'.', " - moving toward: ", target_global_position)
 	apply_gravity(delta)
+	if not is_moving:
+		velocity_influence += friction_influence
 	#print("movement - velocity_influence: ", velocity_influence)
 
 
 func apply_gravity(delta):
 	velocity_influence.y += gravity_force * delta
+
+
+func apply_friction(delta)->Vector2:
+	var friction_influence = Vector2.ZERO
+	if not _entity.velocity.x == 0:
+		if _entity.velocity.x > 0:
+			friction_influence.x -= friction * delta
+		else:
+			friction_influence.x += friction * delta
+	return friction_influence
 
 
 func move_towards_target(delta: float) -> void:

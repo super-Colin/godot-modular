@@ -10,7 +10,6 @@ radius = 600.0
 
 [node name="Behavior" type="Node2D"]
 script = ExtResource("1_k8ji1")
-primary_target_group = null
 
 [node name="LineOfSightRay" type="RayCast2D" parent="."]
 target_position = Vector2(300, 0)

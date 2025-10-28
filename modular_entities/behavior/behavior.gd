@@ -41,6 +41,19 @@ var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add in
 
 #endregion Exports
 
+#region Signals
+signal s_trigger_attack
+signal s_target_moved
+signal s_target_changed
+#endregion Signals
+
+#region Internal State
+var has_target:bool = false
+var target_entity:Node2D
+#endregion Internal State
+
+
+
 #region Editor Updates
 @export_group("Editor Updates")
 ## Update in editor to reflect export settings
@@ -61,17 +74,6 @@ func update_sight_cone():
 #endregion Editor Updates
 
 
-
-#region Signals
-signal s_trigger_attack
-signal s_target_moved
-signal s_target_changed
-#endregion Signals
-
-#region Internal State
-var has_target:bool = false
-var target_entity:Node2D
-#endregion Internal State
 
 
 func _ready() -> void:
@@ -119,7 +121,7 @@ func _health_area_entered_damage_area(area):
 func change_target(entity:Node2D):
 	target_entity = entity
 	has_target = true
-	s_new_target.emit(target_entity)
+	s_target_changed.emit(target_entity)
 
 
 
