@@ -2,8 +2,8 @@ class_name ComponentNode2D
 extends Node2D
 
 
-
-var _entity: CharacterBody2D
+## The parent Modular Entity that will use this component
+var _parent_modular_entity: ModularEntity2D
 var _player_controlled:bool = false
 
 
@@ -11,15 +11,15 @@ func _ready() -> void:
 	__ready()
 
 func __ready():
-	_entity = get_parent()
-	_entity.connect_component($'.')
+	_parent_modular_entity = get_parent()
+	_parent_modular_entity.connect_component($'.')
 
 
 func init_component(player_controlled:bool=false):
 	_init_component(player_controlled)
 func _init_component(player_controlled:bool=false):
 	_player_controlled = player_controlled
-	print("component - ", _get_component_id(), " init'd, belongs to: ", _entity)
+	print("component - ", _get_component_id(), " init'd, belongs to: ", _parent_modular_entity)
 
 
 

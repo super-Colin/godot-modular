@@ -68,14 +68,17 @@ func connect_component_signals():
 	# Connect signals
 	if health:
 		health.s_died.connect(died)
-	if movement:
-		movement.s_movement_direction_changed.connect(face_direction)
+	#if movement:
+		#movement.s_movement_direction_changed.connect(face_direction)
 	if behavior:
 		if damage:
 			damage.s_health_area_entered.connect(behavior._health_area_entered_damage_area)
 			behavior.s_trigger_attack.connect(damage.attack)
 		if movement:
-			behavior.s_target_moved.connect(movement.update_target)
+			behavior.s_target_updated.connect(movement.update_target)
+			behavior.s_move_forward.connect(movement._move_forward)
+			#behavior.s_turn_around.connect(movement._turn_around)
+			behavior.s_turn_around.connect(_turn_around)
 			#behavior.s_target_changed.connect(movement.update_target)
 			
 #endregion Component Setup
@@ -90,6 +93,7 @@ func add_veloctiy_influence(component):
 
 
 #region Component Contracts
+
 func connect_component(component):
 	components[component._get_component_id()] = component
 
@@ -103,30 +107,44 @@ func died(destroy:bool=true):
 
 func _health_area_entered(area):
 	if area:
-		print("health area entered")
+		print("entity - health area entered")
 
 #endregion Health Related
 
 
 #region Movement Related
+var facing_direction:Vector2 = Vector2.RIGHT
+
+func _turn_around():
+	print("entity - turning around")
+	face_direction(facing_direction * -1)
+
 func face_direction(direction:Vector2):
+	print("entity - facing direction: ", direction)
+	facing_direction = direction
 	if direction.x >= 0:
 		face_right()
 	else: 
 		face_left()
 
 func face_left():
-	for key in components.keys():
-		if components[key].has_method("face_left"): components[key].face_left()
+	print("entity - facing left, frame: ", Engine.get_frames_drawn())
+	print("entity - position is: ", position)
 	if $'.'.has_node("Sprite"):
 		$Sprite.flip_h = true
+	for key in components.keys():
+		# TODO update to _face_left
+		if components[key].has_method("face_left"): 
+			components[key].face_left()
+
 
 
 func face_right():
-	for key in components.keys():
-		if components[key].has_method("face_right"): components[key].face_right()
 	if $'.'.has_node("Sprite"):
 		$Sprite.flip_h = false
+	for key in components.keys():
+		if components[key].has_method("face_right"): 
+			components[key].face_right()
 
 #endregion Movement Related
 

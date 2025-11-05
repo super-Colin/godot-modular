@@ -14,11 +14,11 @@ var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add in
 @export_group("Jumping")
 @export var canJump:bool = true
 @export var jumpVelocity = 200
-@export_subgroup("Continous Jump")
-## Can hold and release jump for variable jump height
-@export var canContinousJump:bool = false
-@export var canContinousJumpLength:float = 0.5
-@export var jumpVelocityContinous = 40
+#@export_subgroup("Continous Jump")
+### Can hold and release jump for variable jump height
+#@export var canContinousJump:bool = false
+#@export var canContinousJumpLength:float = 0.5
+#@export var jumpVelocityContinous = 40
 @export_group("Gravity")
 @export var gravity_enabled: bool = true
 @export var gravity_use_default: bool = true
@@ -38,6 +38,7 @@ var is_moving: bool = false # Flag to track if character is currently moving
 var is_jumping: bool = false # Flag to track if character is currently jumping upward
 var target_global_position: Vector2 = Vector2.ZERO
 var target_direction: Vector2 = Vector2.ZERO
+
 #endregion Internal-Variables
 
 
@@ -80,11 +81,18 @@ func tick_physics(delta: float) -> void:
 func apply_gravity(delta):
 	velocity_influence.y += gravity_force * delta
 
+func _turn_around():
+	#_parent_modular_entity.facing_direction *= -1
+	set_target_directly_in_front()
+
+func _move_forward():
+	set_target_directly_in_front()
+
 
 func apply_friction(delta)->Vector2:
 	var friction_influence = Vector2.ZERO
-	if not _entity.velocity.x == 0:
-		if _entity.velocity.x > 0:
+	if not _parent_modular_entity.velocity.x == 0:
+		if _parent_modular_entity.velocity.x > 0:
 			friction_influence.x -= friction * delta
 		else:
 			friction_influence.x += friction * delta
@@ -96,6 +104,10 @@ func move_towards_target(delta: float) -> void:
 		return
 	move_towards($'.'.global_position - target_global_position, delta)
 
+func set_target_directly_in_front():
+	#target_global_position = _parent_modular_entity.get_facing_direction() * 500
+	#target_global_position = _parent_modular_entity.global_position + (_parent_modular_entity.facing_direction * 200)
+	target_global_position = _parent_modular_entity.global_position - (_parent_modular_entity.facing_direction * 200)
 
 func move_towards(target: Vector2, delta: float) -> void:
 	#print("movement - moving toward: ", target)

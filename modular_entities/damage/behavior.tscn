@@ -10,13 +10,7 @@ radius = 600.0
 
 [node name="Behavior" type="Node2D"]
 script = ExtResource("1_k8ji1")
-
-[node name="LineOfSightRay" type="RayCast2D" parent="."]
-target_position = Vector2(300, 0)
-collision_mask = 31
-
-[node name="TargetMarker" type="Marker2D" parent="."]
-position = Vector2(300, 0)
+idle_behavior = null
 
 [node name="Alert" type="Area2D" parent="."]
 
@@ -36,3 +30,20 @@ collision_mask = 31
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sight"]
 polygon = PackedVector2Array(0, 0, 380, -286, 390, 311)
+
+[node name="LineOfSightRay" type="RayCast2D" parent="."]
+target_position = Vector2(300, 0)
+collision_mask = 31
+
+[node name="WallCheckRay" type="RayCast2D" parent="."]
+modulate = Color(0, 1, 0.015686275, 1)
+position = Vector2(0, 8)
+target_position = Vector2(74, 8)
+
+[node name="LedgeCheckRay" type="RayCast2D" parent="."]
+modulate = Color(0.96862745, 0.49803922, 0.7921569, 1)
+position = Vector2(0, -92)
+target_position = Vector2(51, 184)
+
+[node name="TargetMarker" type="Marker2D" parent="."]
+position = Vector2(300, 0)
