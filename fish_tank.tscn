@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://xokbbd30ktlr"]
+
+[node name="FishTank" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+polygon = PackedVector2Array(8, 8, 1144, 7, 1136, 632, 8, 636, 4, 10, -45, -48, -55, 741, 1282, 741, 1262, -116, -27, -128)

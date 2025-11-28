@@ -1,6 +1,7 @@
 class_name MovementComponent2D
 extends ComponentNode2D
 
+var debug_string = "Movement - "
 
 #region Component Contracts
 var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add influence
@@ -12,13 +13,17 @@ var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add in
 @export var acceleration: float = 100.0
 @export var friction: float = 500.0
 @export_group("Jumping")
-@export var canJump:bool = true
-@export var jumpVelocity = 200
+@export var can_jump:bool = true
+@export var jump_velocity = 1000
 #@export_subgroup("Continous Jump")
 ### Can hold and release jump for variable jump height
 #@export var canContinousJump:bool = false
 #@export var canContinousJumpLength:float = 0.5
 #@export var jumpVelocityContinous = 40
+@export_group("Flying")
+@export var can_fly:bool = false
+@export var always_flying:bool = false
+@export var fly_velocity = 200
 @export_group("Gravity")
 @export var gravity_enabled: bool = true
 @export var gravity_use_default: bool = true
@@ -72,7 +77,10 @@ func tick_physics(delta: float) -> void:
 	else:
 		move_towards_target(delta)
 		#print($'.', " - moving toward: ", target_global_position)
-	apply_gravity(delta)
+	if needs_to_jump:
+		jump()
+	else:
+		apply_gravity(delta)
 	if not is_moving:
 		velocity_influence += friction_influence
 	#print("movement - velocity_influence: ", velocity_influence)
@@ -134,6 +142,8 @@ func check_if_direction_changed(direction: Vector2) -> bool:
 func calc_gravity_influence(delta:float) -> Vector2:
 	if not gravity_enabled:
 		return Vector2.ZERO
+	if always_flying:
+		return Vector2.ZERO
 	var gravity_effect = Vector2.ZERO
 	# Apply gravitational force based on time delta and gravity strength
 	gravity_effect.y += gravity_force * delta
@@ -141,6 +151,21 @@ func calc_gravity_influence(delta:float) -> Vector2:
 	if gravity_effect.y > max_fall_speed:
 		gravity_effect.y = max_fall_speed
 	return gravity_effect
+
+
+
+
+
+
+var needs_to_jump = false
+func _jump_requested():
+	needs_to_jump = true
+
+func jump():
+	$'.'.velocity_influence.y -= jump_velocity
+	print(debug_string, "jumping, velocity: ", $'.'.velocity_influence)
+	needs_to_jump = false
+
 
 
 

@@ -10,7 +10,6 @@ radius = 600.0
 
 [node name="Behavior" type="Node2D"]
 script = ExtResource("1_k8ji1")
-idle_behavior = null
 
 [node name="Alert" type="Area2D" parent="."]
 
@@ -29,7 +28,7 @@ collision_layer = 0
 collision_mask = 31
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sight"]
-polygon = PackedVector2Array(0, 0, 380, -286, 390, 311)
+polygon = PackedVector2Array(0, 0, 300, -519.61523, 300, 519.61523)
 
 [node name="LineOfSightRay" type="RayCast2D" parent="."]
 target_position = Vector2(300, 0)

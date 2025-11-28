@@ -157,6 +157,7 @@ animations = [{
 
 [node name="ModularEntity" type="CharacterBody2D"]
 script = ExtResource("1_ed3ws")
+entity_type_name = "Base Test"
 groups = Array[int]([0])
 
 [node name="Behavior" parent="." instance=ExtResource("6_sxh75")]

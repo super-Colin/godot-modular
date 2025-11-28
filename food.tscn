@@ -9,6 +9,7 @@
 size = Vector2(40, 40)
 
 [node name="Food" type="CharacterBody2D" groups=["Food"]]
+collision_layer = 2
 script = ExtResource("1_q6vj8")
 groups = Array[int]([2])
 

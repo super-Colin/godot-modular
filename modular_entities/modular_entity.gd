@@ -4,6 +4,8 @@ extends CharacterBody2D
 
 
 #region Exports
+@export var entity_base_type:Modular.Types
+@export var entity_type_name:String = "Fish"
 @export var player_controlled:bool = false
 @export var groups:Array[Modular.Types] = []
 #endregion Exports
@@ -16,7 +18,7 @@ var components: Dictionary = {}
 
 func add_self_to_groups():
 	for group in groups:
-		print("group - ", group)
+		print("entity ", entity_type_name, ", - group", group)
 	$'.'.is_in_modular_group(Modular.Types.CREATURE)
 
 func is_in_modular_group(group_type:Modular.Types):
@@ -31,12 +33,14 @@ func __ready() -> void:
 		components[key].init_component(player_controlled)
 	add_self_to_groups()
 	connect_component_signals()
-	print("entity - componets: ", components)
+	#Modular.set_layers_by_type($'.', entity_base_type)
+	Modular.set_collision_layers_by_type($'.', entity_base_type)
+	print("entity ", entity_type_name, ", - componets: ", components)
 
 
 func _process(delta: float) -> void:
 	for key in components.keys():
-		#print("entity - _process key: ", key, ", node: ", components[key])
+		#print("entity ,", entity_type_name, ", - _process key: ", key, ", node: ", components[key])
 		components[key].tick_process(delta)
 
 
@@ -80,7 +84,8 @@ func connect_component_signals():
 			#behavior.s_turn_around.connect(movement._turn_around)
 			behavior.s_turn_around.connect(_turn_around)
 			#behavior.s_target_changed.connect(movement.update_target)
-			
+			behavior.s_jump_forward.connect(movement._jump_requested)
+
 #endregion Component Setup
 
 
@@ -107,7 +112,7 @@ func died(destroy:bool=true):
 
 func _health_area_entered(area):
 	if area:
-		print("entity - health area entered")
+		print("entity ", entity_type_name, ", - health area entered")
 
 #endregion Health Related
 
@@ -116,11 +121,11 @@ func _health_area_entered(area):
 var facing_direction:Vector2 = Vector2.RIGHT
 
 func _turn_around():
-	print("entity - turning around")
+	#print("entity ", entity_type_name, ", - turning around")
 	face_direction(facing_direction * -1)
 
 func face_direction(direction:Vector2):
-	print("entity - facing direction: ", direction)
+	#print("entity ", entity_type_name, ", - facing direction: ", direction)
 	facing_direction = direction
 	if direction.x >= 0:
 		face_right()
@@ -128,8 +133,8 @@ func face_direction(direction:Vector2):
 		face_left()
 
 func face_left():
-	print("entity - facing left, frame: ", Engine.get_frames_drawn())
-	print("entity - position is: ", position)
+	#print("entity ", entity_type_name, ", - facing left, frame: ", Engine.get_frames_drawn())
+	#print("entity ", entity_type_name, ", - position is: ", position)
 	if $'.'.has_node("Sprite"):
 		$Sprite.flip_h = true
 	for key in components.keys():

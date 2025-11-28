@@ -1,11 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://m1e6ht11kxf4"]
+[gd_scene load_steps=7 format=3 uid="uid://m1e6ht11kxf4"]
 
 [ext_resource type="PackedScene" uid="uid://nk3do2ojew8w" path="res://food.tscn" id="2_e2o6t"]
 [ext_resource type="Script" uid="uid://ddybqjxsam8gt" path="res://debug_window.gd" id="3_feb5d"]
+[ext_resource type="PackedScene" uid="uid://we2l8uwk4o4c" path="res://entities/fish.tscn" id="4_7jktm"]
 [ext_resource type="PackedScene" uid="uid://cc16opn7ujaoe" path="res://entities/patroler.tscn" id="4_fc0e3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e2o6t"]
 size = Vector2(1113, 58)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fc0e3"]
+size = Vector2(80, 53)
 
 [node name="Game" type="Node2D"]
 
@@ -32,8 +36,15 @@ shape = SubResource("RectangleShape2D_e2o6t")
 [node name="Left" type="StaticBody2D" parent="Ground"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Left"]
-position = Vector2(-455, 574)
+position = Vector2(-150, 577)
 shape = SubResource("RectangleShape2D_e2o6t")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Ground"]
+position = Vector2(378, 353)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/StaticBody2D"]
+position = Vector2(6, 0.5)
+shape = SubResource("RectangleShape2D_fc0e3")
 
 [node name="DebugPane" type="Control" parent="."]
 visible = false
@@ -54,3 +65,6 @@ position = Vector2(962, 340)
 
 [node name="Patroler" parent="." instance=ExtResource("4_fc0e3")]
 position = Vector2(675, 256)
+
+[node name="ModularEntity" parent="." instance=ExtResource("4_7jktm")]
+position = Vector2(-603, -178)

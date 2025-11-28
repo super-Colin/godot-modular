@@ -2,6 +2,8 @@
 class_name BehaviorComponent2D
 extends ComponentNode2D
 
+var debug_string = "Behavior - "
+
 
 #region Component Contracts
 var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add influence
@@ -9,11 +11,11 @@ var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add in
 #endregion Component Contracts
 
 
-
-
 #region Enums
 enum IdlePatterns {BACK_AND_FORTH_TO_LIMITS}
 #endregion Enums
+
+
 
 #region Exports
 ## Will it attempt to attack any of it's targets?
@@ -50,26 +52,31 @@ enum IdlePatterns {BACK_AND_FORTH_TO_LIMITS}
 
 #endregion Exports
 
+
+
 #region Signals
 signal s_trigger_attack
 signal s_target_updated
 signal s_target_changed
 # Basic Movement
 signal s_move_forward
+signal s_jump_forward
 signal s_turn_around
 #endregion Signals
+
+
 
 #region Internal State
 var has_target:bool = false
 var target_entity:Node2D
 var is_idle:bool = true
+var needs_to_jump = true
 #endregion Internal State
 
 
 
 
-
-
+#region Contracts
 
 func _ready() -> void:
 	__ready()
@@ -90,26 +97,32 @@ func tick_physics(delta):
 
 
 func face_left():
-	print("behavior - facing left")
+	#print("behavior - facing left")
 	if $LineOfSightRay.target_position.x < 0:
 		return
 	$LineOfSightRay.target_position.x *= -1
 	$WallCheckRay.target_position.x *= -1
 	$LedgeCheckRay.target_position.x *= -1
+	$Sight/CollisionPolygon2D.rotation = deg_to_rad(180)
 
 func face_right():
-	print("behavior - facing right")
+	#print("behavior - facing right")
 	if $LineOfSightRay.target_position.x > 0:
 		return
 	$LineOfSightRay.target_position.x *= -1
 	$WallCheckRay.target_position.x *= -1
 	$LedgeCheckRay.target_position.x *= -1
+	$Sight/CollisionPolygon2D.rotation = 0
+
+
+#endregion Contracts
+
 
 
 func idle_update_target():
 	if idle_behavior == IdlePatterns.BACK_AND_FORTH_TO_LIMITS:
 		if is_ledge_ahead() or is_wall_ahead():
-			print("behavior - ledge: ", is_ledge_ahead()," or wall: ", is_wall_ahead(), " detected, turning around")
+			#print("behavior - ledge: ", is_ledge_ahead()," or wall: ", is_wall_ahead(), " detected, turning around")
 			s_turn_around.emit()
 			return
 		#print("behavior - moving forward")
@@ -124,8 +137,31 @@ func is_ledge_ahead()->bool:
 
 func is_wall_ahead()->bool:
 	if $WallCheckRay.is_colliding():
-		return true
+		if is_jumpable_ledge():
+			print(debug_string, "requesting jump")
+			s_jump_forward.emit()
+		else:
+			return true
 	return false
+
+var jumpable_tries = 0
+var max_jumpable_tries = 3
+var move_up_amount = Vector2(0,80)
+func is_jumpable_ledge()->bool:
+	var distance = $LineOfSightRay.target_position.length()
+	var new_position = $WallCheckRay.target_position + (move_up_amount * jumpable_tries)
+	$LineOfSightRay.target_position = new_position
+	$LineOfSightRay.force_raycast_update()
+	print(debug_string, "checking if wall is jumpable at: ", $LineOfSightRay.target_position)
+	if not $LineOfSightRay.get_collider():
+		return true
+	jumpable_tries += 1
+	if jumpable_tries < max_jumpable_tries:
+		return is_jumpable_ledge()
+	jumpable_tries = 0
+	return false
+
+
 
 
 #region Utility AI Helper Functions
@@ -182,7 +218,7 @@ func is_entity_in_sight(entity:Node2D): # Double check collision layers if not w
 
 
 func _health_area_entered_damage_area(area):
-	print("behavior - health area entered: ", area)
+	#print("behavior - health area entered: ", area)
 	s_trigger_attack.emit()
 
 
