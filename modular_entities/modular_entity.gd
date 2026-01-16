@@ -1,7 +1,7 @@
 class_name ModularEntity2D
 extends CharacterBody2D
 
-
+var debug_string = "Entity" + entity_type_name + " - "
 
 #region Exports
 @export var entity_base_type:Modular.Types
@@ -16,17 +16,10 @@ var components: Dictionary = {}
 
 
 
-func add_self_to_groups():
-	for group in groups:
-		print("entity ", entity_type_name, ", - group", group)
-	$'.'.is_in_modular_group(Modular.Types.CREATURE)
-
-func is_in_modular_group(group_type:Modular.Types):
-	return $'.'.is_in_group(Modular.Groups[group_type])
-
 
 func _ready() -> void:
 	__ready() # if _ready is overwritten be sure to call __ready in it
+
 
 func __ready() -> void:
 	for key in components.keys():
@@ -34,8 +27,10 @@ func __ready() -> void:
 	add_self_to_groups()
 	connect_component_signals()
 	#Modular.set_layers_by_type($'.', entity_base_type)
-	Modular.set_collision_layers_by_type($'.', entity_base_type)
-	print("entity ", entity_type_name, ", - componets: ", components)
+	for group in groups:
+		Modular.set_collision_layer($'.', entity_base_type)
+		#Modular.set_collision_mask_layers($'.', entity_base_type)
+	print("entity ", entity_type_name, ", - components: ", components)
 
 
 func _process(delta: float) -> void:
@@ -50,6 +45,18 @@ func _physics_process(delta: float) -> void:
 	for key in components.keys():
 		add_veloctiy_influence(components[key])
 	move_and_slide()
+
+
+
+
+func add_self_to_groups():
+	for group in groups:
+		print("entity ", entity_type_name, ", - group", group)
+	$'.'.is_in_modular_group(Modular.Types.CREATURE)
+
+func is_in_modular_group(group_type:Modular.Types):
+	return $'.'.is_in_group(Modular.Groups[group_type])
+
 
 
 

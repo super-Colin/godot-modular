@@ -1,6 +1,6 @@
 extends Area2D
 
-@export var interactionFunction:Interactions.Callables
+@export var interactionFunction:Interactions.Types
 
 
 

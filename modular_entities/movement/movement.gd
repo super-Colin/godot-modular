@@ -14,7 +14,7 @@ var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add in
 @export var friction: float = 500.0
 @export_group("Jumping")
 @export var can_jump:bool = true
-@export var jump_velocity = 1000
+@export var jump_velocity = 400
 #@export_subgroup("Continous Jump")
 ### Can hold and release jump for variable jump height
 #@export var canContinousJump:bool = false
@@ -122,6 +122,8 @@ func move_towards(target: Vector2, delta: float) -> void:
 	check_if_direction_changed(target)
 	#target_position = target
 	velocity_influence.x = target.normalized().x * delta * max_speed
+	if not _parent_modular_entity.is_on_floor():
+		velocity_influence.x *= 0.25
 	if target == Vector2.ZERO:
 		is_moving = false
 	else:
@@ -162,8 +164,9 @@ func _jump_requested():
 	needs_to_jump = true
 
 func jump():
-	$'.'.velocity_influence.y -= jump_velocity
-	print(debug_string, "jumping, velocity: ", $'.'.velocity_influence)
+	#$'.'.velocity_influence.y -= jump_velocity
+	$'.'.velocity_influence.y = -jump_velocity
+	#print(debug_string, "jumping, velocity: ", $'.'.velocity_influence)
 	needs_to_jump = false
 
 

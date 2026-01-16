@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=3 uid="uid://nk3do2ojew8w"]
+[gd_scene load_steps=5 format=3 uid="uid://nk3do2ojew8w"]
 
-[ext_resource type="PackedScene" uid="uid://bgdm50ecqlhsg" path="res://modular_entities/damage/health1.tscn" id="1_8txok"]
 [ext_resource type="Script" uid="uid://d1ovaemjvkl0m" path="res://modular_entities/modular_entity.gd" id="1_q6vj8"]
 [ext_resource type="PackedScene" uid="uid://wbx67x7ig4nc" path="res://modular_entities/movement/movement.tscn" id="4_5fm71"]
 [ext_resource type="PackedScene" uid="uid://b58fqhfcyq3la" path="res://modular_entities/interactable/interactable.tscn" id="4_v8piq"]
@@ -9,16 +8,12 @@
 size = Vector2(40, 40)
 
 [node name="Food" type="CharacterBody2D" groups=["Food"]]
-collision_layer = 2
+collision_layer = 0
 script = ExtResource("1_q6vj8")
 groups = Array[int]([2])
 
-[node name="Health" parent="." instance=ExtResource("1_8txok")]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Health"]
-shape = SubResource("RectangleShape2D_pohk7")
-
 [node name="Interactable" parent="." instance=ExtResource("4_v8piq")]
+interactionFunction = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
 shape = SubResource("RectangleShape2D_pohk7")

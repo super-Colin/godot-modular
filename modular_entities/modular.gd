@@ -26,17 +26,34 @@ const Layers = {
 }
 
 
-static func set_collision_mask_by_type(node:CollisionObject2D, type:Types):
-	#node.set_collision_layer_value(0, false)
-	node.set_collision_layer_value(Layers[type], true)
-static func set_collision_layers_by_type(node:CollisionObject2D, type:Types):
-	#node.set_collision_layer_value(0, false)
+
+
+static func set_collision_layer(node:CollisionObject2D, type:Types):
+	print('Modular - setting collision layers for: ', node, "on: ", Layers[type])
 	node.set_collision_layer_value(Layers[type], true)
 
 
+static func set_collision_mask_layer(node:CollisionObject2D, type:Types):
+	print('Modular - setting collision mask layers for: ', node, "on: ", Layers[type])
+	node.set_collision_mask_value(Layers[type], true)
 
 
 
 
 
 #EntityTypes.Groups
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#

@@ -1,70 +1,42 @@
-[gd_scene load_steps=7 format=3 uid="uid://m1e6ht11kxf4"]
+[gd_scene load_steps=2 format=3 uid="uid://m1e6ht11kxf4"]
 
-[ext_resource type="PackedScene" uid="uid://nk3do2ojew8w" path="res://food.tscn" id="2_e2o6t"]
-[ext_resource type="Script" uid="uid://ddybqjxsam8gt" path="res://debug_window.gd" id="3_feb5d"]
-[ext_resource type="PackedScene" uid="uid://we2l8uwk4o4c" path="res://entities/fish.tscn" id="4_7jktm"]
-[ext_resource type="PackedScene" uid="uid://cc16opn7ujaoe" path="res://entities/patroler.tscn" id="4_fc0e3"]
+[ext_resource type="Script" uid="uid://cvoj0jtrmjodo" path="res://game.gd" id="1_80nbo"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_e2o6t"]
-size = Vector2(1113, 58)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_fc0e3"]
-size = Vector2(80, 53)
-
-[node name="Game" type="Node2D"]
-
-[node name="Ground" type="Node2D" parent="."]
-
-[node name="Bottom" type="StaticBody2D" parent="Ground"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Bottom"]
-position = Vector2(580, 604)
-shape = SubResource("RectangleShape2D_e2o6t")
-
-[node name="Top" type="StaticBody2D" parent="Ground"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Top"]
-position = Vector2(-90, 401)
-shape = SubResource("RectangleShape2D_e2o6t")
-
-[node name="Right" type="StaticBody2D" parent="Ground"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Right"]
-position = Vector2(1480, 551)
-shape = SubResource("RectangleShape2D_e2o6t")
-
-[node name="Left" type="StaticBody2D" parent="Ground"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Left"]
-position = Vector2(-150, 577)
-shape = SubResource("RectangleShape2D_e2o6t")
-
-[node name="StaticBody2D" type="StaticBody2D" parent="Ground"]
-position = Vector2(378, 353)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/StaticBody2D"]
-position = Vector2(6, 0.5)
-shape = SubResource("RectangleShape2D_fc0e3")
-
-[node name="DebugPane" type="Control" parent="."]
-visible = false
+[node name="Game" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("3_feb5d")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_80nbo")
 
-[node name="Label" type="Label" parent="DebugPane"]
+[node name="SceneSelector" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "FPS: 22"
+offset_right = 177.0
+offset_bottom = 66.0
 
-[node name="Food" parent="." instance=ExtResource("2_e2o6t")]
-position = Vector2(962, 340)
+[node name="Enemies1" type="Button" parent="SceneSelector"]
+layout_mode = 2
+text = "Enemies Example 1"
 
-[node name="Patroler" parent="." instance=ExtResource("4_fc0e3")]
-position = Vector2(675, 256)
+[node name="Interaction1" type="Button" parent="SceneSelector"]
+layout_mode = 2
+text = "Interaction Example 1"
 
-[node name="ModularEntity" parent="." instance=ExtResource("4_7jktm")]
-position = Vector2(-603, -178)
+[node name="MenuButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -53.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Menu"
+
+[node name="SceneHolder" type="Node2D" parent="."]

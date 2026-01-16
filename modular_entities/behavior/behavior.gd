@@ -79,10 +79,11 @@ var needs_to_jump = true
 #region Contracts
 
 func _ready() -> void:
-	__ready()
-	_update_with_editor_settings()
 	if Engine.is_editor_hint():
 		return
+	__ready()
+	_update_with_editor_settings()
+	set_sight_layers()
 
 ## Called by parent ModularEntity 
 #func tick_process(delta):
@@ -94,6 +95,11 @@ func tick_physics(delta):
 	if Engine.get_frames_drawn() % 3 == 0:
 		idle_update_target()
 
+
+func set_sight_layers():
+	for group in target_groups:
+		#Modular.set_collision_mask_layer($LineOfSightRay, group)
+		$LineOfSightRay.set_collision_mask_value(Modular.Layers[group], true)
 
 
 func face_left():
@@ -138,7 +144,7 @@ func is_ledge_ahead()->bool:
 func is_wall_ahead()->bool:
 	if $WallCheckRay.is_colliding():
 		if is_jumpable_ledge():
-			print(debug_string, "requesting jump")
+			#print(debug_string, "requesting jump")
 			s_jump_forward.emit()
 		else:
 			return true
@@ -152,7 +158,7 @@ func is_jumpable_ledge()->bool:
 	var new_position = $WallCheckRay.target_position + (move_up_amount * jumpable_tries)
 	$LineOfSightRay.target_position = new_position
 	$LineOfSightRay.force_raycast_update()
-	print(debug_string, "checking if wall is jumpable at: ", $LineOfSightRay.target_position)
+	#print(debug_string, "checking if wall is jumpable at: ", $LineOfSightRay.target_position)
 	if not $LineOfSightRay.get_collider():
 		return true
 	jumpable_tries += 1

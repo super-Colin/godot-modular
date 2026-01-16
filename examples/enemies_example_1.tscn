@@ -1,0 +1,83 @@
+[gd_scene load_steps=7 format=3 uid="uid://b3aqcwmtv3xen"]
+
+[ext_resource type="Script" uid="uid://ddybqjxsam8gt" path="res://debug_window.gd" id="1_hyy1w"]
+[ext_resource type="PackedScene" uid="uid://nk3do2ojew8w" path="res://food.tscn" id="2_mq1u1"]
+[ext_resource type="PackedScene" uid="uid://cc16opn7ujaoe" path="res://entities/patroler.tscn" id="3_ig67d"]
+[ext_resource type="PackedScene" uid="uid://we2l8uwk4o4c" path="res://entities/fish.tscn" id="4_3t1fe"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jaomr"]
+size = Vector2(1113, 58)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6om0v"]
+size = Vector2(115, 121.5)
+
+[node name="EnemiesExample1" type="Node2D"]
+
+[node name="Ground" type="Node2D" parent="."]
+
+[node name="Bottom" type="StaticBody2D" parent="Ground"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Bottom"]
+position = Vector2(580, 604)
+shape = SubResource("RectangleShape2D_jaomr")
+
+[node name="Top" type="StaticBody2D" parent="Ground"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Top"]
+position = Vector2(-90, 401)
+shape = SubResource("RectangleShape2D_jaomr")
+
+[node name="Right" type="StaticBody2D" parent="Ground"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Right"]
+position = Vector2(1615, 580)
+shape = SubResource("RectangleShape2D_jaomr")
+
+[node name="Left" type="StaticBody2D" parent="Ground"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Left"]
+position = Vector2(-150, 577)
+shape = SubResource("RectangleShape2D_jaomr")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Ground"]
+position = Vector2(378, 353)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/StaticBody2D"]
+position = Vector2(6, 0.5)
+shape = SubResource("RectangleShape2D_6om0v")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Ground"]
+position = Vector2(1906, 513)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/StaticBody2D2"]
+shape = SubResource("RectangleShape2D_6om0v")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Ground"]
+position = Vector2(-34, 495)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/StaticBody2D3"]
+position = Vector2(-7, 9)
+shape = SubResource("RectangleShape2D_6om0v")
+
+[node name="DebugPane" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_hyy1w")
+
+[node name="Label" type="Label" parent="DebugPane"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "FPS: 22"
+
+[node name="Food" parent="." instance=ExtResource("2_mq1u1")]
+position = Vector2(1553, 519)
+
+[node name="Patroler" parent="." instance=ExtResource("3_ig67d")]
+position = Vector2(725, 308)
+
+[node name="ModularEntity" parent="." instance=ExtResource("4_3t1fe")]
+position = Vector2(62, 113)

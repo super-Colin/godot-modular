@@ -39,7 +39,6 @@ var invulnerable: bool = false
 ## Called in the parent modular entity's _ready() function
 func init_component(player_controlled:bool=false):
 	_init_component(player_controlled)
-	collision_layer
 
 
 
@@ -52,6 +51,9 @@ func init_component(player_controlled:bool=false):
 
 
 
+func heal(amount):
+	current_health += amount
+	return
 
 
 func take_hit(damage_source:DamageComponent2D): # Component Contract
