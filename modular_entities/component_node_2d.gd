@@ -1,25 +1,31 @@
 class_name ComponentNode2D
 extends Node2D
 
+#var debug_string = "ComponentNode2D Base - "
 
 ## The parent Modular Entity that will use this component
 var _parent_modular_entity: ModularEntity2D
 var _player_controlled:bool = false
+@export var _component_type:Modular.ComponentTypes = Modular.ComponentTypes.BEHAVIOR
 
 
 func _ready() -> void:
 	__ready()
 
 func __ready():
-	_parent_modular_entity = get_parent()
-	_parent_modular_entity.connect_component($'.')
+	var _parent = get_parent()
+	if _parent.has_method("connect_component"):
+		_parent_modular_entity = _parent
+		_parent_modular_entity.connect_component($'.')
+	else:
+		printerr("Component Node Base - ", "parent isn't modular entity")
 
 
 func init_component(player_controlled:bool=false):
 	_init_component(player_controlled)
 func _init_component(player_controlled:bool=false):
 	_player_controlled = player_controlled
-	print("component - ", _get_component_id(), " init'd, belongs to: ", _parent_modular_entity)
+	print("ComponentNode2D Base - ", _get_component_id(), " init'd, belongs to: ", _parent_modular_entity)
 
 
 

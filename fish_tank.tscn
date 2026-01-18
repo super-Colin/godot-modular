@@ -5,4 +5,4 @@
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
-polygon = PackedVector2Array(8, 8, 1144, 7, 1136, 632, 8, 636, 4, 10, -45, -48, -55, 741, 1282, 741, 1262, -116, -27, -128)
+polygon = PackedVector2Array(8, 8, 1485, 124, 1404, 916, 25, 911, 4, 10, -45, -48, -51, 989, 1678, 1045, 1642, -41, -27, -128)

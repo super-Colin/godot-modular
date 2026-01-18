@@ -2,7 +2,7 @@
 class_name BehaviorComponent2D
 extends ComponentNode2D
 
-var debug_string = "Behavior - "
+var debug_string = "Behavior Component - "
 
 
 #region Component Contracts
@@ -34,8 +34,8 @@ enum IdlePatterns {BACK_AND_FORTH_TO_LIMITS}
 
 @export_group("Targets")
 ## What groups will it target
-@export var target_groups:Array[Modular.Types] = []
-@export var primary_target_group:Modular.Types
+@export var target_groups:Array[Modular.EntityTypes] = []
+@export var primary_target_group:Modular.EntityTypes
 ## Will it actively seek out targets
 @export var hunts_for_targets: bool = true
 
@@ -99,11 +99,11 @@ func tick_physics(delta):
 func set_sight_layers():
 	for group in target_groups:
 		#Modular.set_collision_mask_layer($LineOfSightRay, group)
-		$LineOfSightRay.set_collision_mask_value(Modular.Layers[group], true)
+		$LineOfSightRay.set_collision_mask_value(Modular.EntityLayers[group], true)
 
 
 func face_left():
-	#print("behavior - facing left")
+	#print(debug_string, "facing left")
 	if $LineOfSightRay.target_position.x < 0:
 		return
 	$LineOfSightRay.target_position.x *= -1
@@ -112,7 +112,7 @@ func face_left():
 	$Sight/CollisionPolygon2D.rotation = deg_to_rad(180)
 
 func face_right():
-	#print("behavior - facing right")
+	#print("debug_string, "facing right")
 	if $LineOfSightRay.target_position.x > 0:
 		return
 	$LineOfSightRay.target_position.x *= -1
@@ -128,10 +128,10 @@ func face_right():
 func idle_update_target():
 	if idle_behavior == IdlePatterns.BACK_AND_FORTH_TO_LIMITS:
 		if is_ledge_ahead() or is_wall_ahead():
-			#print("behavior - ledge: ", is_ledge_ahead()," or wall: ", is_wall_ahead(), " detected, turning around")
+			#print(debug_string, "ledge: ", is_ledge_ahead()," or wall: ", is_wall_ahead(), " detected, turning around")
 			s_turn_around.emit()
 			return
-		#print("behavior - moving forward")
+		#print(debug_string, "moving forward")
 		s_move_forward.emit()
 	return
 
@@ -208,14 +208,14 @@ func find_new_target():
 	if not targets.size() > 0:
 		s_move_forward.emit()
 		return
-	#print("behavior - targets: ", targets)
+	#print(debug_string, "targets: ", targets)
 	if is_entity_in_sight(targets[0]):
 		change_target(targets[0])
-		print("behavior - found target: ", target_entity)
+		print(debug_string, "found target: ", target_entity)
 
 
 func is_entity_in_sight(entity:Node2D): # Double check collision layers if not working
-	#print("behavior - $Sight.overlaps_body(entity): ", entity, ", ", $Sight.overlaps_body(entity))
+	#print(debug_string, "$Sight.overlaps_body(entity): ", entity, ", ", $Sight.overlaps_body(entity))
 	if $Sight.overlaps_body(entity):
 	#if $Sight.overlaps_area(entity):
 		return true
@@ -224,7 +224,7 @@ func is_entity_in_sight(entity:Node2D): # Double check collision layers if not w
 
 
 func _health_area_entered_damage_area(area):
-	#print("behavior - health area entered: ", area)
+	#print(debug_string, "health area entered: ", area)
 	s_trigger_attack.emit()
 
 

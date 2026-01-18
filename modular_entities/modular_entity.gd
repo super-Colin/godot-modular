@@ -1,17 +1,22 @@
 class_name ModularEntity2D
 extends CharacterBody2D
+## !!! TODO's to work with this:
+## Name your Spite2D "Sprite" in the tree
 
-var debug_string = "Entity" + entity_type_name + " - "
+
+@onready var debug_string = "Entity: " + entity_type_name + " - "
 
 #region Exports
-@export var entity_base_type:Modular.Types
 @export var entity_type_name:String = "Fish"
 @export var player_controlled:bool = false
-@export var groups:Array[Modular.Types] = []
+@export var sprite_faces_left:bool = false
+@export var entity_base_type:Modular.EntityTypes = Modular.EntityTypes.CREATURE
+@export var entity_subtypes:Array[Modular.EntityTypes] = []
 #endregion Exports
 
 
-
+## This will hold references to the actual nodes
+## Component nodes will register themselves in their _ready()
 var components: Dictionary = {}
 
 
@@ -25,24 +30,26 @@ func __ready() -> void:
 	for key in components.keys():
 		components[key].init_component(player_controlled)
 	add_self_to_groups()
-	connect_component_signals()
-	#Modular.set_layers_by_type($'.', entity_base_type)
-	for group in groups:
+	if not player_controlled:
+		connect_component_signals()
+	if not entity_subtypes.has(entity_base_type):
+		entity_subtypes.append(entity_base_type)
+	for group in entity_subtypes:
 		Modular.set_collision_layer($'.', entity_base_type)
-		#Modular.set_collision_mask_layers($'.', entity_base_type)
-	print("entity ", entity_type_name, ", - components: ", components)
+		# TODO, this may need to be replaced. Sum the total and convert to a bit mask???
+	print(debug_string, "components: ", components)
 
 
 func _process(delta: float) -> void:
 	for key in components.keys():
-		#print("entity ,", entity_type_name, ", - _process key: ", key, ", node: ", components[key])
 		components[key].tick_process(delta)
+
 
 
 func _physics_process(delta: float) -> void:
 	for key in components.keys():
-		components[key].tick_physics(delta)
-	for key in components.keys():
+		if components[key].has_method("tick_physics"):
+			components[key].tick_physics(delta)
 		add_veloctiy_influence(components[key])
 	move_and_slide()
 
@@ -50,11 +57,11 @@ func _physics_process(delta: float) -> void:
 
 
 func add_self_to_groups():
-	for group in groups:
+	for group in entity_subtypes:
 		print("entity ", entity_type_name, ", - group", group)
-	$'.'.is_in_modular_group(Modular.Types.CREATURE)
+	$'.'.is_in_modular_group(Modular.EntityTypes.CREATURE)
 
-func is_in_modular_group(group_type:Modular.Types):
+func is_in_modular_group(group_type:Modular.EntityTypes):
 	return $'.'.is_in_group(Modular.Groups[group_type])
 
 
@@ -63,14 +70,14 @@ func is_in_modular_group(group_type:Modular.Types):
 #region Component Setup
 func connect_component_signals():
 	var movement: MovementComponent2D
-	var health: HealthComponent2D
+	var health: Component2DHealth
 	var damage: DamageComponent2D
 	var behavior: BehaviorComponent2D
 	# Sort out components
 	for key in components:
 		if components[key] is MovementComponent2D:
 			movement = components[key]
-		elif components[key] is HealthComponent2D:
+		elif components[key] is Component2DHealth:
 			health = components[key]
 		elif components[key] is DamageComponent2D:
 			damage = components[key]
@@ -93,24 +100,20 @@ func connect_component_signals():
 			#behavior.s_target_changed.connect(movement.update_target)
 			behavior.s_jump_forward.connect(movement._jump_requested)
 
+func get_component(name:String):
+	if components.has(name):
+		return components[name]
 #endregion Component Setup
 
+#region Component Contracts
+func connect_component(component):
+	components[component._get_component_id()] = component
 
-#region Component
 func add_veloctiy_influence(component):
 	if "velocity_influence" in component:
 		velocity += component.velocity_influence
 
-#endregion Component
-
-
-#region Component Contracts
-
-func connect_component(component):
-	components[component._get_component_id()] = component
-
 #endregion Component Contracts
-
 
 #region Health Related
 func died(destroy:bool=true):
@@ -125,7 +128,8 @@ func _health_area_entered(area):
 
 
 #region Movement Related
-var facing_direction:Vector2 = Vector2.RIGHT
+#var facing_direction:Vector2 = Vector2.RIGHT
+var facing_direction:Vector2 = Vector2.LEFT if sprite_faces_left else Vector2.RIGHT
 
 func _turn_around():
 	#print("entity ", entity_type_name, ", - turning around")
@@ -143,9 +147,10 @@ func face_left():
 	#print("entity ", entity_type_name, ", - facing left, frame: ", Engine.get_frames_drawn())
 	#print("entity ", entity_type_name, ", - position is: ", position)
 	if $'.'.has_node("Sprite"):
-		$Sprite.flip_h = true
+		#$Sprite.flip_h = true
+		$Sprite.flip_h = false if sprite_faces_left else true
 	for key in components.keys():
-		# TODO update to _face_left
+		# TODO update to face_left in components
 		if components[key].has_method("face_left"): 
 			components[key].face_left()
 
@@ -153,7 +158,9 @@ func face_left():
 
 func face_right():
 	if $'.'.has_node("Sprite"):
-		$Sprite.flip_h = false
+		#$Sprite.flip_h = false
+		$Sprite.flip_h = true if sprite_faces_left else false
+		
 	for key in components.keys():
 		if components[key].has_method("face_right"): 
 			components[key].face_right()
@@ -185,57 +192,3 @@ func face_right():
 	## TODO: Set up break effects, particle systems, or destruction logic
 	#pass
 #
-#func _physics_process(delta):
-	## Main physics update loop
-	#if can_move:
-		#handle_movement(delta)
-	#
-	## Update AI if not player controlled
-	#if not is_player_controlled and ai_component:
-		#ai_component.update_ai(delta)
-#
-#func handle_movement(delta):
-	## Apply gravity
-	#velocity.y += gravity * delta
-	#
-	## Handle horizontal movement
-	#if is_player_controlled:
-		#handle_player_input()
-	#else:
-		## Use component-based movement if available
-		#if movement_component:
-			#movement_component.apply_movement(velocity, delta)
-	#
-	## Move the entity
-	#move_and_slide()
-#
-#func handle_player_input():
-	## Handle player input for movement
-	#var direction = Input.get_axis("move_left", "move_right")
-	#velocity.x = direction * move_speed
-	#
-	## Handle jumping
-	#if Input.is_action_just_pressed("jump") and is_on_floor():
-		#jump()
-#
-#func jump():
-	## Make entity jump if on ground
-	#if is_on_floor():
-		#velocity.y = jump_speed
-#
-#func _on_damage_taken(damage_amount):
-	## Handle damage received
-	## TODO: Add visual feedback or hit effects
-	#pass
-#
-#func _on_health_depleted():
-	## Handle death/destruction
-	#if is_breakable:
-		#break_entity()
-	#else:
-		#queue_free()
-#
-#func break_entity():
-	## Break the entity into pieces or remove it
-	## TODO: Implement destruction effects, particle systems, or drop items
-	#queue_free()

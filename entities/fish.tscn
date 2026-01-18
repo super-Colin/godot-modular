@@ -166,7 +166,6 @@ auto_attack = false
 alert_range = 250.0
 forget_range = 600.0
 target_groups = Array[int]([2])
-idle_behavior = 0
 vision_range = 500.0
 vision_angle = 70.0
 

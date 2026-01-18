@@ -1,17 +1,17 @@
-class_name HealthComponent2D
+class_name Component2DHealth
 extends ComponentArea2D
 
 
 
 
 #region Component Contracts
-var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add influence
+var velocity_influence: Vector2 = Vector2.ZERO # Used by parent for knockback
 #endregion Component Contracts
 
 
 #region Exports
 @export var max_health: int = 100
-@export var destroy_on_death: bool = false
+@export var destroy_on_death: bool = true
 @export_group("Invulnerability")
 @export var invulnerable_always: bool = false
 @export var invulnerable_on_hit: bool = true
@@ -53,6 +53,10 @@ func init_component(player_controlled:bool=false):
 
 func heal(amount):
 	current_health += amount
+	return
+
+func hurt(amount):
+	current_health -= amount
 	return
 
 

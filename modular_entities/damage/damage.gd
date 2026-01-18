@@ -36,7 +36,7 @@ signal s_attackCooldownFinished
 var can_attack = true
 var is_attacking = false
 #var attack_active_time = 0.0
-var health_areas_inside: Array[HealthComponent2D] = []
+var health_areas_inside: Array[Component2DHealth] = []
 @onready var attackId = randi()
 #endregion Internal State
 
@@ -80,7 +80,7 @@ func attack_done():
 
 func _area_entered(area):
 	#if area.has_method("takeDamageFromSource"):
-	if area is HealthComponent2D:
+	if area is Component2DHealth:
 		s_health_area_entered.emit(area)
 		health_areas_inside.append(area)
 		if is_attacking:

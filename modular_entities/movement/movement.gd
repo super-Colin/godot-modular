@@ -1,14 +1,16 @@
 class_name MovementComponent2D
 extends ComponentNode2D
 
-var debug_string = "Movement - "
+var debug_string = "Movement Component - "
 
 #region Component Contracts
 var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add influence
 #endregion Component Contracts
 
-
 #region Exports
+enum MovementModes {SIDE, TOPDOWN, ISOMETRIC}
+## Based on the viewpoint for the game
+@export var movement_mode:MovementModes = MovementModes.SIDE
 @export var max_speed: float = 400.0
 @export var acceleration: float = 100.0
 @export var friction: float = 500.0
@@ -23,7 +25,7 @@ var velocity_influence: Vector2 = Vector2.ZERO # Used by parent entity to add in
 @export_group("Flying")
 @export var can_fly:bool = false
 @export var always_flying:bool = false
-@export var fly_velocity = 200
+@export var fly_velocity: float = 200
 @export_group("Gravity")
 @export var gravity_enabled: bool = true
 @export var gravity_use_default: bool = true
@@ -40,10 +42,10 @@ signal s_movement_direction_changed(direction: Vector2) # Emitted when movement 
 
 #region Internal-Variables
 var is_moving: bool = false # Flag to track if character is currently moving
+var needs_to_jump:bool = false
 var is_jumping: bool = false # Flag to track if character is currently jumping upward
 var target_global_position: Vector2 = Vector2.ZERO
 var target_direction: Vector2 = Vector2.ZERO
-
 #endregion Internal-Variables
 
 
@@ -65,7 +67,7 @@ func init_component(player_controlled:bool=false):
 
 
 
-
+## Called every physics process frame by the parent
 func tick_physics(delta: float) -> void:
 	velocity_influence = Vector2.ZERO
 	is_moving = false
@@ -74,13 +76,17 @@ func tick_physics(delta: float) -> void:
 		var input_x_influence = Input.get_axis("ui_left", "ui_right")
 		target_direction = Vector2(input_x_influence * 10000, 0)
 		move_towards( Vector2(input_x_influence, 0), delta)
-	else:
+		if Input.is_action_just_pressed("Jump"):
+			jump()
+		else:
+			apply_gravity(delta)
+	else: # 
 		move_towards_target(delta)
 		#print($'.', " - moving toward: ", target_global_position)
-	if needs_to_jump:
-		jump()
-	else:
-		apply_gravity(delta)
+		if needs_to_jump :
+			jump()
+		else:
+			apply_gravity(delta)
 	if not is_moving:
 		velocity_influence += friction_influence
 	#print("movement - velocity_influence: ", velocity_influence)
@@ -159,11 +165,13 @@ func calc_gravity_influence(delta:float) -> Vector2:
 
 
 
-var needs_to_jump = false
+
 func _jump_requested():
 	needs_to_jump = true
 
 func jump():
+	if not get_parent().is_on_floor():
+		return
 	#$'.'.velocity_influence.y -= jump_velocity
 	$'.'.velocity_influence.y = -jump_velocity
 	#print(debug_string, "jumping, velocity: ", $'.'.velocity_influence)

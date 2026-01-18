@@ -1,10 +1,11 @@
-extends Area2D
-
+#extends Area2D
+class_name InteractsComponent2D
+extends ComponentArea2D
 
 
 #region Exports
 @export var autoInteract = false
-@export var cooldown = 1.0
+@export var cooldown = 1.0 # (In seconds) before being able to interact again
 #endregion Exports
 
 
@@ -24,20 +25,20 @@ func _ready() -> void:
 
 func _areaEntered(area):
 	#print("damage - area entered: ", area)
-	if area.has_method("_interact_with"):
+	if area.has_method("interaction"):
 		s_interactableAreaEntered.emit(area)
-		#area.takeDamageFromSource($'.')
+		area.interaction($'.')
 
 func interact_with(interactableArea):
 	if interactableArea.has_method("_interact_with"):
-		interactableArea.takeDamageFromSource($'.')
+		interactableArea._interact_with($'.')
 		var timer = get_tree().create_timer(cooldown).timeout.connect(cooldownDone)
 
 func cooldownDone():
 	s_cooldownFinished.emit()
 
 
-
+#func tick
 
 
 

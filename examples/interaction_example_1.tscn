@@ -1,0 +1,64 @@
+[gd_scene load_steps=5 format=3 uid="uid://u3dlx7ue4wru"]
+
+[ext_resource type="PackedScene" uid="uid://nk3do2ojew8w" path="res://food.tscn" id="2_08m35"]
+[ext_resource type="PackedScene" uid="uid://b3unhn4oodxpc" path="res://examples/player.tscn" id="2_jylxh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_08m35"]
+size = Vector2(1113, 58)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jylxh"]
+size = Vector2(115, 121.5)
+
+[node name="InteractionExample1" type="Node2D"]
+
+[node name="Ground" type="Node2D" parent="."]
+
+[node name="Bottom" type="StaticBody2D" parent="Ground"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Bottom"]
+position = Vector2(580, 604)
+shape = SubResource("RectangleShape2D_08m35")
+
+[node name="Top" type="StaticBody2D" parent="Ground"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Top"]
+position = Vector2(1226, 357)
+shape = SubResource("RectangleShape2D_08m35")
+
+[node name="Right" type="StaticBody2D" parent="Ground"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Right"]
+position = Vector2(1615, 580)
+shape = SubResource("RectangleShape2D_08m35")
+
+[node name="Left" type="StaticBody2D" parent="Ground"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Left"]
+position = Vector2(-150, 577)
+shape = SubResource("RectangleShape2D_08m35")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Ground"]
+position = Vector2(378, 353)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/StaticBody2D"]
+position = Vector2(6, 0.5)
+shape = SubResource("RectangleShape2D_jylxh")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Ground"]
+position = Vector2(1906, 513)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/StaticBody2D2"]
+shape = SubResource("RectangleShape2D_jylxh")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Ground"]
+position = Vector2(-34, 495)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/StaticBody2D3"]
+position = Vector2(-7, 9)
+shape = SubResource("RectangleShape2D_jylxh")
+
+[node name="Food" parent="." instance=ExtResource("2_08m35")]
+position = Vector2(937, 501)
+
+[node name="Player" parent="." instance=ExtResource("2_jylxh")]
+position = Vector2(763, 521)

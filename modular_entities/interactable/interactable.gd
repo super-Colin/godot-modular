@@ -1,6 +1,7 @@
 extends Area2D
 
-@export var interactionFunction:Interactions.Types
+@export var interaction_function:Interactions.Types
+@export var interaction_strengh:float = 1.0
 
 
 
